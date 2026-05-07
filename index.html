@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>우리집 스마트 가계부</title>
     
-    <!-- PWA 웹앱 설정: 진짜 앱처럼 설치되게 하는 핵심 코드 -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3b82f6">
     <link rel="apple-touch-icon" href="icon.png">
@@ -26,7 +25,7 @@
         .dark .type-btn.selected-expense { background-color: #7f1d1d; border-color: #f87171; color: #fca5a5; }
         .type-btn.selected-income { background-color: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
         .dark .type-btn.selected-income { background-color: #1e3a8a; border-color: #60a5fa; color: #bfdbfe; }
-        button, input, select { touch-action: manipulation; }
+        button, input, select, label { touch-action: manipulation; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
@@ -34,7 +33,7 @@
         .progress-bar-fill { transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out; }
     </style>
 </head>
-<body class="text-gray-800 antialiased light" onload="initApp()">
+<body class="text-gray-800 antialiased light">
 
 <div class="max-w-md mx-auto bg-white dark:bg-gray-800 min-h-screen shadow-lg flex flex-col relative overflow-hidden transition-colors duration-300">
     
@@ -42,12 +41,10 @@
     <header class="bg-white dark:bg-gray-800 px-5 py-4 border-b dark:border-gray-700 sticky top-0 z-20 flex justify-between items-center shadow-sm transition-colors duration-300">
         <h1 class="text-2xl font-black text-gray-900 dark:text-white transition-colors duration-300">🏠 가계부</h1>
         <div class="flex items-center gap-3">
-            <!-- 서버 상태 표시 (API 연동) -->
             <div id="server-status" class="flex items-center gap-1 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full shadow-inner">
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500" id="status-dot"></span>
                 서버
             </div>
-            <!-- 다크모드 토글 -->
             <button onclick="toggleDarkMode()" class="text-gray-500 dark:text-yellow-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                 <i id="dark-mode-icon" class="fa-solid fa-moon text-xl"></i>
             </button>
@@ -67,7 +64,6 @@
 
     <!-- 1. 입력 화면 -->
     <main id="view-input" class="p-5 flex-1 overflow-y-auto pb-24 dark:bg-gray-800 transition-colors duration-300">
-        <!-- 수입/지출 선택 -->
         <div class="flex gap-4 mb-6">
             <button onclick="setType('expense')" id="btn-type-expense" class="type-btn selected-expense flex-1 py-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 text-2xl font-bold text-gray-700 dark:text-gray-300 transition shadow-sm bg-white dark:bg-gray-800">
                 <i class="fa-solid fa-minus-circle mr-2"></i>지출
@@ -85,10 +81,14 @@
         <div class="mb-6 bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl border dark:border-gray-700 transition-colors duration-300">
             <div class="flex justify-between items-center mb-3">
                 <label id="label-amount" class="block text-xl font-bold text-gray-800 dark:text-gray-200">얼마인가요?</label>
-                <button id="btn-ocr" onclick="simulateOCR()" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-3 py-2 rounded-lg font-bold text-sm border border-indigo-200 dark:border-indigo-700 active:bg-indigo-200 dark:active:bg-indigo-800 shadow-sm transition">
-                    <i class="fa-solid fa-camera mr-1"></i> 스캔
-                </button>
+                
+                <!-- 수정됨: 실제 카메라 및 파일 업로드를 지원하는 버튼 -->
+                <label class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 px-3 py-2 rounded-lg font-bold text-sm border border-indigo-200 dark:border-indigo-700 active:bg-indigo-200 dark:active:bg-indigo-800 shadow-sm cursor-pointer transition flex items-center">
+                    <i class="fa-solid fa-camera mr-1"></i> 영수증 스캔
+                    <input type="file" accept="image/*" capture="environment" id="input-camera" class="hidden" onchange="uploadReceipt(this)">
+                </label>
             </div>
+            
             <div class="relative">
                 <input type="number" id="input-amount" placeholder="0" class="w-full px-4 py-4 text-3xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 dark:text-white transition-colors duration-300">
                 <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl font-bold text-gray-500 dark:text-gray-400">원</span>
@@ -157,9 +157,7 @@
         </div>
         
         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-3">상세 내역 <button onclick="fetchTransactions()" class="text-sm bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded ml-2"><i class="fa-solid fa-rotate-right"></i> 새로고침</button></h3>
-        <div id="transaction-list">
-            <!-- JS 동적 생성 -->
-        </div>
+        <div id="transaction-list"></div>
     </main>
 
     <!-- 3. 차량 관리 화면 -->
@@ -175,16 +173,6 @@
         </div>
 
         <div id="car-content" class="hidden">
-            <div class="bg-indigo-50 dark:bg-indigo-900 border border-indigo-200 dark:border-indigo-700 p-4 rounded-2xl flex justify-between items-center mb-4 shadow-sm cursor-pointer transition" onclick="toggleAlimtalk()">
-                <div>
-                    <h4 class="font-bold text-indigo-900 dark:text-indigo-200 text-lg"><i class="fa-solid fa-comment-sms mr-2"></i>카카오 알림톡 수신</h4>
-                    <p class="text-sm text-indigo-700 dark:text-indigo-300">교체 시기가 오면 톡으로 알려드려요.</p>
-                </div>
-                <div class="w-12 h-6 bg-indigo-500 rounded-full relative">
-                    <div id="alimtalk-toggle" class="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5 shadow-sm transition-all"></div>
-                </div>
-            </div>
-
             <div class="text-center mb-6 mt-2">
                 <h2 id="display-car-name" class="text-3xl font-black text-gray-800 dark:text-white transition">차량 이름</h2>
                 <div id="display-car-plate" class="inline-block mt-1 bg-gray-800 dark:bg-gray-700 text-white font-bold px-4 py-1 rounded-md text-lg shadow-inner">12가 3456</div>
@@ -203,44 +191,8 @@
                 </div>
             </div>
 
-            <div class="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-800 p-5 rounded-2xl shadow-sm mb-6 transition">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-black text-blue-900 dark:text-blue-300"><i class="fa-solid fa-gas-pump mr-2"></i>유지비 기록</h3>
-                    <div class="text-sm font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">누적: <span id="car-total-expense">0</span>원</div>
-                </div>
-                
-                <div class="flex flex-col gap-2 mb-3">
-                    <select id="car-expense-type" onchange="toggleCarExpenseCustom()" class="bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 text-blue-900 dark:text-blue-200 text-lg font-bold rounded-xl p-3 focus:outline-none transition">
-                        <option value="주유비">⛽ 주유비</option>
-                        <option value="정비">🔧 정비</option>
-                        <option value="세금">📜 세금</option>
-                        <option value="보험">🛡️ 보험</option>
-                        <option value="세차">🧼 세차</option>
-                        <option value="소모품">📦 소모품</option>
-                        <option value="기타">✏️ 기타 (직접 입력)</option>
-                    </select>
-                    <input type="text" id="car-expense-custom" placeholder="어떤 비용인가요?" class="hidden px-4 py-3 text-lg font-bold border border-blue-300 dark:border-blue-700 rounded-xl focus:outline-none bg-white dark:bg-gray-800 dark:text-white transition">
-                </div>
-                <div class="flex items-center gap-2">
-                    <input type="number" id="car-expense-amount" placeholder="금액 입력" class="w-full px-4 py-3 text-xl font-black text-right border border-blue-300 dark:border-blue-700 rounded-xl focus:outline-none bg-white dark:bg-gray-800 dark:text-white transition">
-                    <span class="text-lg font-bold text-blue-800 dark:text-blue-300 shrink-0">원</span>
-                    <button onclick="saveCarExpense()" class="bg-blue-600 dark:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl whitespace-nowrap active:bg-blue-700 shadow-sm transition">
-                        서버 저장
-                    </button>
-                </div>
-                
-                <div class="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
-                    <h4 class="text-sm font-bold text-blue-800 dark:text-blue-300 mb-2">분야별 지출 분포</h4>
-                    <div class="relative h-32 w-full">
-                        <canvas id="carBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
             <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-3">소모품 교체 주기</h3>
-            <div id="consumables-list">
-                <!-- JS 동적 생성 -->
-            </div>
+            <div id="consumables-list"></div>
         </div>
         
         <div id="no-car-message" class="text-center py-10 hidden">
@@ -263,6 +215,7 @@
         </div>
     </div>
 
+    <!-- 범용 확인 창 -->
     <div id="custom-confirm" class="fixed inset-0 bg-black bg-opacity-60 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl transition-colors">
             <p id="confirm-msg" class="text-xl font-bold mb-6 text-gray-800 dark:text-white whitespace-pre-line leading-relaxed"></p>
@@ -273,6 +226,7 @@
         </div>
     </div>
 
+    <!-- 차량 등록 창 -->
     <div id="custom-prompt-car" class="fixed inset-0 bg-black bg-opacity-60 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl transition-colors">
             <h2 class="text-2xl font-black text-gray-800 dark:text-white mb-4 text-center">차량 등록</h2>
@@ -291,6 +245,7 @@
         </div>
     </div>
 
+    <!-- 숫자 입력 수정 창 -->
     <div id="custom-prompt-num" class="fixed inset-0 bg-black bg-opacity-60 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl transition-colors">
             <h2 id="prompt-num-title" class="text-xl font-black text-gray-800 dark:text-white mb-4 text-center">수정</h2>
@@ -309,31 +264,14 @@
 </div>
 
 <script>
-    /* =====================================================================
-       [🔥 서버 연동 핵심 파트 🔥]
-       발급받으신 클라우드타입 서버 주소를 아래에 정확히 넣어주세요.
-       ===================================================================== */
+    // 🔥 서버 주소를 정확하게 입력하세요 (끝에 / 빼고)
     const API_BASE_URL = "https://port-0-family-ledger-backend-movgah4ae40856c6.sel3.cloudtype.app";
     
     let state = {
         currentUser: '',
-        users: ['어머니', '아버지', '아들', '딸'],
-        transactions: [], // 이제 초기 더미 데이터 대신 빈 배열로 시작합니다.
-        vehicles: [
-            // 차량 데이터도 추후 서버 연동 가능. 현재는 로컬 기반 유지
-            { 
-                id: 1, name: '쏘나타', plate: '12가 3456', currentKm: 78500, 
-                consumables: [
-                    { id: 'oil', name: '엔진오일', icon: 'fa-oil-can', cycle: 10000, lastKm: 75000, desc: '1만km / 1년' },
-                    { id: 'filter', name: '에어컨 필터', icon: 'fa-fan', cycle: 10000, lastKm: 70000, desc: '1만km / 6개월' },
-                    { id: 'pad', name: '브레이크 패드', icon: 'fa-circle-stop', cycle: 40000, lastKm: 35000, desc: '4만km' },
-                    { id: 'fluid', name: '브레이크 오일', icon: 'fa-droplet', cycle: 40000, lastKm: 40000, desc: '4만km / 2년' },
-                    { id: 'tire', name: '타이어', icon: 'fa-ring', cycle: 50000, lastKm: 30000, desc: '5만km / 3년' },
-                    { id: 'battery', name: '배터리', icon: 'fa-car-battery', cycle: 60000, lastKm: 0, desc: '6만km / 3년' },
-                    { id: 'mission', name: '미션오일', icon: 'fa-gears', cycle: 80000, lastKm: 0, desc: '8만km ~ 10만km' }
-                ]
-            }
-        ],
+        users: ['어머니', '아버지', '아들', '딸'], // 기본값, DB 연동됨
+        transactions: [],
+        vehicles: [], // 이제 빈 배열로 시작, DB 연동됨
         currentVehicleId: null,
         currentType: 'expense',
         currentCategory: '식비',
@@ -351,175 +289,169 @@
     ];
 
     let pieChartInstance = null;
-    let barChartInstance = null;
 
     /* =====================================================================
-       [서버 API 통신 & 실시간 웹소켓 로직]
+       [뒤로가기 제어 로직 - 모바일 전용]
+       ===================================================================== */
+    let backPressedOnce = false;
+
+    // 브라우저 뒤로가기 버튼(또는 스와이프) 감지
+    window.addEventListener('popstate', function(event) {
+        if (event.state && event.state.tab) {
+            // 다른 탭에 있었다면 이전 탭으로 이동 (종료 안 됨)
+            switchTabUI(event.state.tab);
+        } else {
+            // 메인 화면(기록하기 탭 등 시작점)에서 뒤로가기 누른 경우
+            if (!backPressedOnce) {
+                // 종료를 막고 경고창 띄우기
+                history.pushState({ tab: 'input' }, "", ""); 
+                showToast("뒤로 가기를 한 번 더 누르시면 종료됩니다.");
+                backPressedOnce = true;
+                setTimeout(() => { backPressedOnce = false; }, 2000);
+            } else {
+                // 2초 안에 한 번 더 누르면 진짜 종료 허용
+                window.history.back();
+            }
+        }
+    });
+
+    // 탭 이동 함수
+    function switchTab(tabName) {
+        // 현재 상태와 다를 때만 히스토리에 기록 남김 (뒤로가기 시 이 탭으로 돌아오도록)
+        if (history.state && history.state.tab !== tabName) {
+            history.pushState({ tab: tabName }, "", "");
+        }
+        switchTabUI(tabName);
+    }
+
+    function switchTabUI(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('main').forEach(main => main.classList.add('hidden'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+        document.getElementById('view-' + tabName).classList.remove('hidden');
+
+        if(tabName === 'list') fetchTransactions();
+        if(tabName === 'car') renderCar();
+    }
+
+
+    /* =====================================================================
+       [서버 동기화 & 실시간 통신 (웹소켓)]
        ===================================================================== */
     let ws;
 
     function connectWebSocket() {
         if(!API_BASE_URL) return;
-        
-        // API 주소의 http(s)를 ws(s)로 변경하여 웹소켓 연결
         const wsProtocol = API_BASE_URL.startsWith("https") ? "wss://" : "ws://";
         const wsUrl = API_BASE_URL.replace(/^https?:\/\//, wsProtocol) + "/ws";
         
         try {
             ws = new WebSocket(wsUrl);
-            
             ws.onopen = () => console.log("웹소켓(실시간 알림) 연결 성공!");
             
             ws.onmessage = (event) => {
-                showToast("🔔 " + event.data);
-                fetchTransactions(); 
+                if(event.data === "SYS_REFRESH_SETTINGS") {
+                    // 누군가 차량이나 유저를 바꿈 -> 나도 새로고침
+                    fetchSettings();
+                } else {
+                    // 일반 지출 알림
+                    showToast("🔔 " + event.data);
+                    fetchTransactions(); 
+                }
             };
 
-            ws.onclose = () => {
-                console.log("웹소켓 끊김. 3초 후 재연결 시도...");
-                setTimeout(connectWebSocket, 3000);
-            };
+            ws.onclose = () => { setTimeout(connectWebSocket, 3000); };
         } catch (error) {
-            console.warn("현재 미리보기(Canvas) 환경에서는 보안상 웹소켓이 차단되어 있습니다. 10초마다 자동 새로고침으로 대체합니다.", error);
-            setInterval(fetchTransactions, 10000); // 에러 시 폴링으로 우회
+            setInterval(fetchTransactions, 10000); // 실패 시 우회
         }
     }
 
     function updateServerStatus(isOnline) {
         const dot = document.getElementById('status-dot');
         if (isOnline) {
-            dot.classList.remove('bg-red-500');
-            dot.classList.add('bg-green-500');
+            dot.classList.remove('bg-red-500'); dot.classList.add('bg-green-500');
         } else {
-            dot.classList.remove('bg-green-500');
-            dot.classList.add('bg-red-500');
+            dot.classList.remove('bg-green-500'); dot.classList.add('bg-red-500');
         }
     }
 
-    // 서버에서 데이터 불러오기 (GET)
     async function fetchTransactions() {
         if(!API_BASE_URL) return updateServerStatus(false);
         try {
             const response = await fetch(`${API_BASE_URL}/api/transactions`);
             if (response.ok) {
-                const data = await response.json();
-                state.transactions = data; // 서버 데이터를 로컬 상태로 덮어쓰기
+                state.transactions = await response.json();
                 updateServerStatus(true);
                 renderList();
-                if(document.getElementById('view-car').classList.contains('hidden') === false) {
-                    drawVehicleDetails();
+            } else { updateServerStatus(false); }
+        } catch (error) { updateServerStatus(false); }
+    }
+
+    // [신규] 서버에서 설정(차량목록, 가족목록) 가져오기
+    async function fetchSettings() {
+        if(!API_BASE_URL) return;
+        try {
+            // 유저 세팅 가져오기
+            const resU = await fetch(`${API_BASE_URL}/api/settings/users`);
+            if(resU.ok) {
+                const dataU = await resU.json();
+                if(dataU.value) {
+                    state.users = JSON.parse(dataU.value);
+                    // 현재 선택된 유저가 목록에서 삭제된 경우 처리
+                    if(!state.users.includes(state.currentUser)) {
+                        state.currentUser = state.users[0];
+                        updateUIForUser();
+                    }
                 }
-            } else {
-                updateServerStatus(false);
             }
-        } catch (error) {
-            console.error("서버 연결 에러:", error);
-            updateServerStatus(false);
-        }
+            
+            // 차량 세팅 가져오기
+            const resV = await fetch(`${API_BASE_URL}/api/settings/vehicles`);
+            if(resV.ok) {
+                const dataV = await resV.json();
+                if(dataV.value) {
+                    state.vehicles = JSON.parse(dataV.value);
+                    if(document.getElementById('view-car').classList.contains('hidden') === false) {
+                        renderCar();
+                    }
+                }
+            }
+        } catch (error) { console.error("설정 동기화 실패", error); }
     }
 
-    /* =====================================================================
-       [다크모드 및 모달 제어]
-       ===================================================================== */
-    function toggleDarkMode() {
-        state.isDarkMode = !state.isDarkMode;
-        const htmlNode = document.documentElement;
-        const bodyNode = document.body;
-        const icon = document.getElementById('dark-mode-icon');
-        
-        if (state.isDarkMode) {
-            htmlNode.classList.add('dark'); bodyNode.classList.add('dark'); bodyNode.classList.remove('light');
-            icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
-            localStorage.setItem('family_ledger_theme', 'dark');
-            updateChartColors(true);
-        } else {
-            htmlNode.classList.remove('dark'); bodyNode.classList.remove('dark'); bodyNode.classList.add('light');
-            icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
-            localStorage.setItem('family_ledger_theme', 'light');
-            updateChartColors(false);
-        }
-    }
-
-    function initTheme() {
-        const savedTheme = localStorage.getItem('family_ledger_theme');
-        if (savedTheme === 'dark') toggleDarkMode(); 
-    }
-
-    function updateChartColors(isDark) {
-        Chart.defaults.color = isDark ? '#e2e8f0' : '#475569';
-        if(pieChartInstance) pieChartInstance.update();
-        if(barChartInstance) barChartInstance.update();
-    }
-
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.innerText = msg; toast.style.opacity = '1';
-        setTimeout(() => toast.style.opacity = '0', 2000);
-    }
-
-    let confirmCallback = null;
-    function uiConfirm(msg, callback) {
-        document.getElementById('confirm-msg').innerText = msg;
-        document.getElementById('custom-confirm').classList.remove('hidden');
-        confirmCallback = callback;
-    }
-    function closeConfirmModal() { document.getElementById('custom-confirm').classList.add('hidden'); }
-    document.getElementById('confirm-ok-btn').addEventListener('click', () => {
-        closeConfirmModal(); if(confirmCallback) confirmCallback();
-    });
-
-    let numPromptCallback = null;
-    function uiPromptNum(title, defaultVal, callback) {
-        document.getElementById('prompt-num-title').innerText = title;
-        document.getElementById('prompt-num-input').value = defaultVal;
-        document.getElementById('custom-prompt-num').classList.remove('hidden');
-        document.getElementById('prompt-num-input').focus();
-        numPromptCallback = callback;
-    }
-    function closePromptNum() { document.getElementById('custom-prompt-num').classList.add('hidden'); }
-    document.getElementById('prompt-num-ok-btn').addEventListener('click', () => {
-        const val = parseInt(document.getElementById('prompt-num-input').value);
-        if(!isNaN(val)) { closePromptNum(); if(numPromptCallback) numPromptCallback(val); }
-    });
-
-    function uiPromptAddVehicle() {
-        document.getElementById('prompt-car-name').value = '';
-        document.getElementById('prompt-car-plate').value = '';
-        document.getElementById('custom-prompt-car').classList.remove('hidden');
-    }
-    function closePromptCar() { document.getElementById('custom-prompt-car').classList.add('hidden'); }
-    function executeAddVehicle() {
-        const name = document.getElementById('prompt-car-name').value.trim();
-        const plate = document.getElementById('prompt-car-plate').value.trim();
-        if(!name) return showToast("차량 이름을 입력해주세요.");
-        
-        const newCar = {
-            id: Date.now(), name: name, plate: plate || '번호 미등록', currentKm: 0,
-            consumables: JSON.parse(JSON.stringify(defaultConsumables))
-        };
-        state.vehicles.push(newCar); state.currentVehicleId = newCar.id;
-        closePromptCar(); renderCar(); showToast("새 차량 등록 완료!");
-    }
-
-    function uiConfirmDeleteVehicle() {
-        if(state.vehicles.length === 0) return;
-        const car = state.vehicles.find(v => v.id === state.currentVehicleId);
-        uiConfirm(`[${car.name} (${car.plate})] 차량을 완전히 삭제하시겠습니까?\n(기존 비용 기록은 유지됩니다)`, () => {
-            state.vehicles = state.vehicles.filter(v => v.id !== state.currentVehicleId);
-            state.currentVehicleId = state.vehicles.length > 0 ? state.vehicles[0].id : null;
-            renderCar(); showToast("차량이 삭제되었습니다.");
-        });
+    // [신규] 변경된 설정을 서버로 전송하기 (전송하면 웹소켓이 다른 폰들 새로고침 시켜줌)
+    async function saveSettings(key, valueObj) {
+        if(!API_BASE_URL) return;
+        try {
+            await fetch(`${API_BASE_URL}/api/settings/${key}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: JSON.stringify(valueObj) })
+            });
+        } catch (error) { console.error("설정 저장 에러", error); }
     }
 
     /* =====================================================================
        [초기화 및 앱 로직]
        ===================================================================== */
-    async function initApp() {
+    // 앱 처음 켤 때 시작점
+    window.addEventListener('load', async () => {
+        // 첫 화면을 히스토리에 넣어서 뒤로가기 기본 베이스캠프 구축
+        history.pushState({ tab: 'input' }, "", "");
+
         initTheme(); 
         document.getElementById('input-date').valueAsDate = new Date();
+        
+        // 데이터 불러오기 (설정 및 내역)
+        await fetchSettings();
+        await fetchTransactions();
+        
+        // 내 정보 셋업
         const savedUser = localStorage.getItem('family_ledger_user');
         state.currentUser = savedUser && state.users.includes(savedUser) ? savedUser : state.users[0];
+        updateUIForUser();
         
+        // 카테고리 클릭 이벤트 연결
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 this.parentNode.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
@@ -528,25 +460,12 @@
             });
         });
 
-        updateUIForUser();
-        
-        // 시작할 때 서버에서 데이터 불러오기 및 웹소켓 연결
-        await fetchTransactions();
         connectWebSocket();
-    }
+    });
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('main').forEach(main => main.classList.add('hidden'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        document.getElementById('view-' + tabName).classList.remove('hidden');
-
-        if(tabName === 'list') {
-            fetchTransactions(); // 탭 이동 시에도 최신 데이터로 새로고침
-        }
-        if(tabName === 'car') renderCar();
-    }
-
+    /* =====================================================================
+       [유저 모달 및 관리 (서버 연동 됨)]
+       ===================================================================== */
     function updateUIForUser() {
         document.getElementById('current-user-name').innerText = state.currentUser;
         document.getElementById('stats-user-name').innerText = state.currentUser;
@@ -582,24 +501,25 @@
         showToast(`'${name}'(으)로 전환되었습니다.`);
     }
 
-    function addUser() {
+    async function addUser() {
         const nameInput = document.getElementById('new-user-name');
         const name = nameInput.value.trim();
         if(!name) return;
         if(state.users.includes(name)) return showToast("이미 존재하는 이름입니다.");
-        state.users.push(name); nameInput.value = ''; openUserModal(); 
         
-        setTimeout(() => {
-            const listEl = document.getElementById('user-list');
-            listEl.scrollTop = listEl.scrollHeight;
-        }, 100);
+        state.users.push(name); 
+        await saveSettings('users', state.users); // 서버에 저장하여 동기화
+        
+        nameInput.value = ''; openUserModal(); 
         showToast(`${name} 추가됨!`);
     }
 
     function handleDeleteUser(e, name) {
         e.stopPropagation(); 
-        uiConfirm(`[${name}] 가족 구성원을 삭제하시겠습니까?\n(기록은 남아있습니다)`, () => {
+        uiConfirm(`[${name}] 가족 구성원을 삭제하시겠습니까?\n(기록은 남아있습니다)`, async () => {
             state.users = state.users.filter(u => u !== name);
+            await saveSettings('users', state.users); // 서버에 저장하여 동기화
+            
             if(state.currentUser === name) setUser(state.users[0]);
             else openUserModal();
             showToast("삭제되었습니다.");
@@ -624,7 +544,6 @@
             document.getElementById('label-amount').innerText = '얼마인가요?';
             document.getElementById('label-category').innerText = '어디에 쓰셨나요?';
             document.getElementById('label-fixed').innerHTML = `매달 나가는 <strong class="text-red-500 dark:text-red-400">고정 지출</strong>이에요.`;
-            document.getElementById('btn-ocr').classList.remove('hidden'); 
             state.currentCategory = '식비';
         } else {
             document.getElementById('btn-type-income').classList.add('selected-income');
@@ -633,21 +552,43 @@
             document.getElementById('label-amount').innerText = '얼마가 들어왔나요?';
             document.getElementById('label-category').innerText = '어떤 수입인가요?';
             document.getElementById('label-fixed').innerHTML = `매달 들어오는 <strong class="text-blue-600 dark:text-blue-400">고정 수입</strong>이에요.`;
-            document.getElementById('btn-ocr').classList.add('hidden'); 
             state.currentCategory = '월급';
         }
     }
 
-    function simulateOCR() {
-        showToast("📸 영수증 분석 중...");
-        setTimeout(() => {
-            document.getElementById('input-amount').value = 45000;
-            document.getElementById('input-memo').value = "이마트 (자동인식)";
-            showToast("자동 입력 완료!");
-        }, 1500);
+    // [신규] 카메라 또는 갤러리 이미지 업로드 후 서버(OCR) 연동
+    async function uploadReceipt(inputElement) {
+        const file = inputElement.files[0];
+        if(!file) return;
+        
+        showToast("📸 사진 분석 중입니다...");
+        
+        const formData = new FormData();
+        formData.append("file", file);
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/ocr`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            if(data.success) {
+                document.getElementById('input-amount').value = data.amount;
+                document.getElementById('input-memo').value = data.memo;
+                showToast("✅ 영수증 인식 성공!");
+            } else {
+                showToast("❌ 분석 실패. 직접 입력해주세요.");
+            }
+        } catch(error) {
+            console.error("OCR 요청 실패:", error);
+            showToast("서버 통신 에러가 발생했습니다.");
+        }
+        
+        // 동일 파일 다시 올릴 수 있도록 초기화
+        inputElement.value = '';
     }
 
-    // 서버로 데이터 저장 (POST)
     async function saveData() {
         const amount = document.getElementById('input-amount').value;
         if(!amount) return showToast("금액을 입력해주세요!");
@@ -703,15 +644,12 @@
         }
 
         myData.forEach(t => {
-            // DB에서 boolean이 1/0으로 올 수 있으므로 변환 처리
             const isFixedVal = t.is_fixed === 1 || t.is_fixed === true;
             
             if(t.type === 'expense') {
                 expTotal += t.amount;
                 expenseChartData[t.category] = (expenseChartData[t.category] || 0) + t.amount;
-            } else {
-                incTotal += t.amount;
-            }
+            } else { incTotal += t.amount; }
             
             const isExp = t.type === 'expense';
             const color = isExp ? 'red' : 'blue';
@@ -742,7 +680,6 @@
 
         const labels = Object.keys(dataObj);
         const data = Object.values(dataObj);
-        
         if(data.length === 0) { ctx.style.display = 'none'; return; }
         ctx.style.display = 'block';
 
@@ -761,28 +698,8 @@
         });
     }
 
-    function downloadExcel() {
-        const myData = state.transactions.filter(t => t.user === state.currentUser);
-        if(myData.length === 0) return showToast("다운로드할 데이터가 없습니다.");
-        
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
-        csvContent += "날짜,구분,카테고리,금액,메모\n";
-        
-        myData.forEach(t => {
-            const typeStr = t.type === 'expense' ? '지출' : '수입';
-            csvContent += `${t.date},${typeStr},${t.category},${t.amount},${t.memo || ''}\n`;
-        });
-        
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${state.currentUser}_가계부_내역.csv`);
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        showToast("엑셀 파일이 다운로드 되었습니다.");
-    }
-
     /* =====================================================================
-       [차량 관리 로직 (차계부 서버 통신 포함)]
+       [차량 관리 로직 (DB 연동 완전판)]
        ===================================================================== */
     function renderCar() {
         const selectEl = document.getElementById('vehicle-select');
@@ -821,19 +738,6 @@
         document.getElementById('display-car-plate').innerText = car.plate;
         document.getElementById('car-current-km').value = car.currentKm;
         
-        // 서버에서 받아온 차량 유지비 합산
-        const carExpenses = state.transactions.filter(t => t.vehicle_id === car.id && t.type === 'expense');
-        const carTotal = carExpenses.reduce((sum, t) => sum + t.amount, 0);
-        document.getElementById('car-total-expense').innerText = carTotal.toLocaleString();
-        
-        let barData = {};
-        carExpenses.forEach(t => {
-            const memoArr = (t.memo || '').split(' - ');
-            const sub = memoArr.length > 1 ? memoArr[1] : '기타';
-            barData[sub] = (barData[sub] || 0) + t.amount;
-        });
-        drawBarChart(barData);
-
         const listEl = document.getElementById('consumables-list');
         listEl.innerHTML = '';
 
@@ -869,114 +773,134 @@
         });
     }
 
-    function drawBarChart(dataObj) {
-        const ctx = document.getElementById('carBarChart');
-        if(!ctx) return;
-        if(barChartInstance) barChartInstance.destroy();
-
-        const labels = Object.keys(dataObj);
-        const data = Object.values(dataObj);
-        if(data.length === 0) { ctx.style.display = 'none'; return; }
-        ctx.style.display = 'block';
-
-        Chart.defaults.color = state.isDarkMode ? '#e2e8f0' : '#475569';
-        barChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: labels, datasets: [{ label: '지출액', data: data, backgroundColor: state.isDarkMode ? '#60a5fa' : '#3b82f6', borderRadius: 4 }] },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
-        });
-    }
-
-    function updateMileage() {
+    async function updateMileage() {
         const km = parseInt(document.getElementById('car-current-km').value);
         if(!km) return;
         const car = state.vehicles.find(v => v.id === state.currentVehicleId);
-        car.currentKm = km; showToast("계기판이 업데이트 되었습니다!"); drawVehicleDetails();
+        car.currentKm = km; 
+        await saveSettings('vehicles', state.vehicles); // 서버 저장
+        showToast("계기판이 업데이트 되었습니다!"); 
+        drawVehicleDetails();
     }
 
     function uiConfirmReplaceConsumable(cId) {
         const inputKm = parseInt(document.getElementById('car-current-km').value);
         if(!inputKm) return showToast("현재 주행거리를 먼저 입력해주세요.");
-        uiConfirm(`현재 주행거리인 [${inputKm.toLocaleString()}km] 기준으로 교체하셨나요?`, () => {
+        uiConfirm(`현재 주행거리인 [${inputKm.toLocaleString()}km] 기준으로 교체하셨나요?`, async () => {
             const car = state.vehicles.find(v => v.id === state.currentVehicleId);
             const item = car.consumables.find(c => c.id === cId);
             car.currentKm = inputKm; item.lastKm = inputKm;   
-            showToast(`${item.name} 교체 완료!`); drawVehicleDetails(); 
+            await saveSettings('vehicles', state.vehicles); // 서버 저장
+            showToast(`${item.name} 교체 완료!`); 
+            drawVehicleDetails(); 
         });
     }
 
     function editLastKm(cId) {
         const car = state.vehicles.find(v => v.id === state.currentVehicleId);
         const item = car.consumables.find(c => c.id === cId);
-        uiPromptNum(`[${item.name}] 마지막 교체 주행거리`, item.lastKm, (newKm) => {
-            item.lastKm = newKm; drawVehicleDetails(); showToast("수동으로 수정되었습니다.");
+        uiPromptNum(`[${item.name}] 마지막 교체 주행거리`, item.lastKm, async (newKm) => {
+            item.lastKm = newKm; 
+            await saveSettings('vehicles', state.vehicles); // 서버 저장
+            drawVehicleDetails(); 
+            showToast("수동으로 수정되었습니다.");
         });
     }
 
-    function toggleCarExpenseCustom() {
-        const typeSelect = document.getElementById('car-expense-type');
-        const customInput = document.getElementById('car-expense-custom');
-        if(typeSelect.value === '기타') { customInput.classList.remove('hidden'); customInput.focus(); } 
-        else { customInput.classList.add('hidden'); }
-    }
-
-    // 서버로 차량 유지비 저장 (POST)
-    async function saveCarExpense() {
-        const amount = document.getElementById('car-expense-amount').value;
-        let subCategory = document.getElementById('car-expense-type').value;
-        if(subCategory === '기타') {
-            const customVal = document.getElementById('car-expense-custom').value;
-            if(!customVal) return showToast("비용 내용을 입력해주세요.");
-            subCategory = customVal;
-        }
-        if(!amount) return showToast("금액을 입력해주세요!");
-
-        const car = state.vehicles.find(v => v.id === state.currentVehicleId);
-        const newTx = {
-            user: state.currentUser,
-            date: new Date().toISOString().split('T')[0],
-            type: 'expense',
-            category: '교통/차량',
-            amount: parseInt(amount),
-            memo: `${car.name} - ${subCategory}`,
-            is_fixed: false,
-            vehicle_id: car.id
+    async function executeAddVehicle() {
+        const name = document.getElementById('prompt-car-name').value.trim();
+        const plate = document.getElementById('prompt-car-plate').value.trim();
+        if(!name) return showToast("차량 이름을 입력해주세요.");
+        
+        const newCar = {
+            id: Date.now(), name: name, plate: plate || '번호 미등록', currentKm: 0,
+            consumables: JSON.parse(JSON.stringify(defaultConsumables))
         };
+        state.vehicles.push(newCar); 
+        state.currentVehicleId = newCar.id;
+        
+        await saveSettings('vehicles', state.vehicles); // 서버 저장
+        
+        closePromptCar(); renderCar(); showToast("새 차량 등록 완료!");
+    }
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/transactions`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTx)
-            });
+    function uiConfirmDeleteVehicle() {
+        if(state.vehicles.length === 0) return;
+        const car = state.vehicles.find(v => v.id === state.currentVehicleId);
+        uiConfirm(`[${car.name}] 차량을 완전히 삭제하시겠습니까?`, async () => {
+            state.vehicles = state.vehicles.filter(v => v.id !== state.currentVehicleId);
+            state.currentVehicleId = state.vehicles.length > 0 ? state.vehicles[0].id : null;
             
-            if (response.ok) {
-                document.getElementById('car-expense-amount').value = '';
-                if(document.getElementById('car-expense-type').value === '기타') document.getElementById('car-expense-custom').value = '';
-                showToast("서버에 차량 유지비 기록 완료!");
-                await fetchTransactions(); // 저장 후 데이터 갱신
-            } else {
-                showToast("❌ 저장 중 오류 발생");
-            }
-        } catch (error) {
-            console.error("차계부 저장 에러:", error);
-            showToast("❌ 서버 연결 실패");
+            await saveSettings('vehicles', state.vehicles); // 서버 저장
+            
+            renderCar(); showToast("차량이 삭제되었습니다.");
+        });
+    }
+
+    /* =====================================================================
+       [다크모드 및 공통 모달 함수들]
+       ===================================================================== */
+    function toggleDarkMode() {
+        state.isDarkMode = !state.isDarkMode;
+        const htmlNode = document.documentElement;
+        const bodyNode = document.body;
+        const icon = document.getElementById('dark-mode-icon');
+        if (state.isDarkMode) {
+            htmlNode.classList.add('dark'); bodyNode.classList.add('dark'); bodyNode.classList.remove('light');
+            icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+            localStorage.setItem('family_ledger_theme', 'dark');
+        } else {
+            htmlNode.classList.remove('dark'); bodyNode.classList.remove('dark'); bodyNode.classList.add('light');
+            icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
+            localStorage.setItem('family_ledger_theme', 'light');
+        }
+        if(pieChartInstance) {
+            Chart.defaults.color = state.isDarkMode ? '#e2e8f0' : '#475569';
+            pieChartInstance.update();
         }
     }
 
-    function toggleAlimtalk() {
-        const t = document.getElementById('alimtalk-toggle');
-        const parent = t.parentElement;
-        if(t.classList.contains('right-0.5')) {
-            t.classList.remove('right-0.5'); t.classList.add('left-0.5');
-            parent.classList.remove('bg-indigo-500'); parent.classList.add('bg-gray-300', 'dark:bg-gray-600');
-            showToast("알림톡 수신 해제");
-        } else {
-            t.classList.add('right-0.5'); t.classList.remove('left-0.5');
-            parent.classList.add('bg-indigo-500'); parent.classList.remove('bg-gray-300', 'dark:bg-gray-600');
-            showToast("카카오 알림톡 활성화");
-        }
+    function initTheme() {
+        const savedTheme = localStorage.getItem('family_ledger_theme');
+        if (savedTheme === 'dark') toggleDarkMode(); 
     }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg; toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 2000);
+    }
+
+    let confirmCallback = null;
+    function uiConfirm(msg, callback) {
+        document.getElementById('confirm-msg').innerText = msg;
+        document.getElementById('custom-confirm').classList.remove('hidden');
+        confirmCallback = callback;
+    }
+    function closeConfirmModal() { document.getElementById('custom-confirm').classList.add('hidden'); }
+    document.getElementById('confirm-ok-btn').addEventListener('click', () => { closeConfirmModal(); if(confirmCallback) confirmCallback(); });
+
+    let numPromptCallback = null;
+    function uiPromptNum(title, defaultVal, callback) {
+        document.getElementById('prompt-num-title').innerText = title;
+        document.getElementById('prompt-num-input').value = defaultVal;
+        document.getElementById('custom-prompt-num').classList.remove('hidden');
+        document.getElementById('prompt-num-input').focus();
+        numPromptCallback = callback;
+    }
+    function closePromptNum() { document.getElementById('custom-prompt-num').classList.add('hidden'); }
+    document.getElementById('prompt-num-ok-btn').addEventListener('click', () => {
+        const val = parseInt(document.getElementById('prompt-num-input').value);
+        if(!isNaN(val)) { closePromptNum(); if(numPromptCallback) numPromptCallback(val); }
+    });
+
+    function uiPromptAddVehicle() {
+        document.getElementById('prompt-car-name').value = '';
+        document.getElementById('prompt-car-plate').value = '';
+        document.getElementById('custom-prompt-car').classList.remove('hidden');
+    }
+    function closePromptCar() { document.getElementById('custom-prompt-car').classList.add('hidden'); }
+
 </script>
 </body>
 </html>
