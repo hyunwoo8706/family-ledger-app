@@ -367,13 +367,13 @@
         }
     }
 
-    // [버그 픽스] 웹소켓 알림이 죽었더라도 무조건 10초마다 가계부 및 '사용자/차계부' 강제 동기화
+    // [수정됨] 웹소켓 알림이 죽었더라도 무조건 5초마다 가계부 및 '사용자/차계부' 강제 동기화 (10초 -> 5초 변경)
     setInterval(() => {
         if (!ws || ws.readyState !== WebSocket.OPEN) {
             fetchTransactions();
             fetchSettings();
         }
-    }, 10000);
+    }, 5000);
 
     function updateServerStatus(isOnline) {
         const dot = document.getElementById('status-dot');
