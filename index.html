@@ -16,18 +16,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
         body { font-family: 'Noto Sans KR', sans-serif; transition: background-color 0.3s ease; }
         body.light { background-color: #f3f4f6; }
-        body.dark { background-color: #191919; } /* 다크모드 배경을 약간 더 짙게 */
+        body.dark { background-color: #191919; } 
         
-        /* 카카오 메인 테마 색상 */
         .kakao-bg { background-color: #FEE500; }
         .kakao-text { color: #191919; }
         .kakao-border { border-color: #FEE500; }
         
         .tab-btn.active { border-bottom: 5px solid #FEE500; color: #191919; font-weight: 900; }
-        .dark .tab-btn.active { border-bottom: 5px solid #FEE500; color: #FEE500; }
+        .dark .tab-btn.active { border-bottom: 5px solid #FEE500; color: #FEE500; font-weight: 900; text-shadow: 0 0 8px rgba(254, 229, 0, 0.4); }
         
         .category-btn.selected { background-color: #FFF8B3; border-color: #FEE500; color: #191919; font-weight: 900; transform: scale(1.02); border-width: 3px; }
-        .dark .category-btn.selected { background-color: #3A3500; border-color: #FEE500; color: #FEE500; }
+        .dark .category-btn.selected { background-color: #4A4315; border-color: #FEE500; color: #FEE500; }
         
         .type-btn.selected-expense { background-color: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         .dark .type-btn.selected-expense { background-color: #7f1d1d; border-color: #f87171; color: #fca5a5; }
@@ -46,230 +45,228 @@
 
 <div class="max-w-md mx-auto bg-white dark:bg-[#222222] min-h-screen shadow-lg flex flex-col relative overflow-hidden transition-colors duration-300">
     
-    <!-- 헤더 (카카오 테마 반영) -->
-    <header class="kakao-bg dark:bg-[#111111] px-5 py-4 border-b border-[#E5CD00] dark:border-gray-800 sticky top-0 z-20 flex justify-between items-center shadow-md transition-colors duration-300">
-        <h1 class="text-3xl font-black kakao-text dark:text-[#FEE500] transition-colors duration-300">🏠 가계부</h1>
-        <div class="flex items-center gap-3">
-            <div id="server-status" class="flex items-center gap-1 text-sm font-black text-gray-700 dark:text-gray-300 bg-white/70 dark:bg-gray-800 px-3 py-1 rounded-full shadow-inner">
-                <span class="w-3 h-3 rounded-full bg-red-500" id="status-dot"></span>
-                서버
+    <!-- 헤더 -->
+    <header class="kakao-bg dark:bg-[#111111] px-4 sm:px-5 py-3 border-b border-[#E5CD00] dark:border-gray-800 sticky top-0 z-20 flex justify-between items-center shadow-md transition-colors duration-300">
+        <h1 class="text-2xl sm:text-3xl font-black kakao-text dark:text-[#FEE500] whitespace-nowrap shrink-0 transition-colors duration-300">🏠 가계부</h1>
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div id="server-status" class="flex items-center gap-1 text-xs font-black text-gray-700 dark:text-gray-300 bg-white/70 dark:bg-gray-800 px-2 py-1 rounded-full shadow-inner whitespace-nowrap">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500" id="status-dot"></span>서버
             </div>
-            <button onclick="toggleDarkMode()" class="text-[#191919] dark:text-[#FEE500] p-2 rounded-full hover:bg-black/10 dark:hover:bg-gray-700 transition">
-                <i id="dark-mode-icon" class="fa-solid fa-moon text-2xl"></i>
+            <button onclick="toggleDarkMode()" class="text-[#191919] dark:text-[#FEE500] p-1.5 rounded-full hover:bg-black/10 dark:hover:bg-gray-700 transition">
+                <i id="dark-mode-icon" class="fa-solid fa-moon text-xl"></i>
             </button>
-            <div onclick="openUserModal()" class="flex items-center gap-2 cursor-pointer bg-white dark:bg-[#333333] px-4 py-2 rounded-full active:bg-gray-100 transition shadow-sm border border-gray-200 dark:border-gray-700">
-                <i class="fa-solid fa-user-circle text-[#191919] dark:text-[#FEE500] text-2xl"></i>
-                <span id="current-user-name" class="font-black text-[#191919] dark:text-white text-lg">로딩중</span>
+            <div onclick="openUserModal()" class="flex items-center gap-1.5 cursor-pointer bg-white dark:bg-[#333333] px-3 py-1.5 rounded-full active:bg-gray-100 transition shadow-sm border border-gray-200 dark:border-gray-700 max-w-[120px]">
+                <i class="fa-solid fa-user-circle text-[#191919] dark:text-[#FEE500] text-xl shrink-0"></i>
+                <span id="current-user-name" class="font-black text-[#191919] dark:text-white text-base truncate">로딩중</span>
             </div>
         </div>
     </header>
 
     <!-- 탭 네비게이션 -->
-    <div class="flex border-b dark:border-gray-700 text-xl bg-white dark:bg-[#222222] shrink-0 z-10 relative transition-colors duration-300">
-        <button onclick="switchTab('input')" id="tab-input" class="tab-btn active flex-1 py-5 text-center text-gray-500 dark:text-gray-400 font-bold transition">기록하기</button>
-        <button onclick="switchTab('list')" id="tab-list" class="tab-btn flex-1 py-5 text-center text-gray-500 dark:text-gray-400 font-bold transition">내역/통계</button>
-        <button onclick="switchTab('car')" id="tab-car" class="tab-btn flex-1 py-5 text-center text-gray-500 dark:text-gray-400 font-bold transition">차계부</button>
+    <div class="flex border-b dark:border-gray-700 text-lg sm:text-xl bg-white dark:bg-[#222222] shrink-0 z-10 relative transition-colors duration-300">
+        <button onclick="switchTab('input')" id="tab-input" class="tab-btn active flex-1 py-4 text-center text-gray-500 dark:text-gray-300 font-bold transition whitespace-nowrap">기록하기</button>
+        <button onclick="switchTab('list')" id="tab-list" class="tab-btn flex-1 py-4 text-center text-gray-500 dark:text-gray-300 font-bold transition whitespace-nowrap">내역/통계</button>
+        <button onclick="switchTab('car')" id="tab-car" class="tab-btn flex-1 py-4 text-center text-gray-500 dark:text-gray-300 font-bold transition whitespace-nowrap">차계부</button>
     </div>
 
     <!-- 1. 입력 화면 -->
-    <main id="view-input" class="p-5 flex-1 overflow-y-auto pb-24 dark:bg-[#222222] transition-colors duration-300">
-        <div class="flex gap-4 mb-6">
-            <button onclick="setType('expense')" id="btn-type-expense" class="type-btn selected-expense flex-1 py-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 text-2xl font-black text-gray-700 dark:text-gray-300 transition shadow-sm bg-white dark:bg-gray-800">
-                <i class="fa-solid fa-minus-circle mr-2"></i>지출
+    <main id="view-input" class="p-4 sm:p-5 flex-1 overflow-y-auto pb-24 dark:bg-[#222222] transition-colors duration-300">
+        <div class="flex gap-3 mb-5">
+            <button onclick="setType('expense')" id="btn-type-expense" class="type-btn selected-expense flex-1 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 text-xl sm:text-2xl font-black text-gray-700 dark:text-gray-300 transition shadow-sm bg-white dark:bg-gray-800 whitespace-nowrap">
+                <i class="fa-solid fa-minus-circle mr-1.5"></i>지출
             </button>
-            <button onclick="setType('income')" id="btn-type-income" class="type-btn flex-1 py-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 text-2xl font-black text-gray-700 dark:text-gray-300 transition shadow-sm bg-white dark:bg-gray-800">
-                <i class="fa-solid fa-plus-circle mr-2"></i>수입
+            <button onclick="setType('income')" id="btn-type-income" class="type-btn flex-1 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 text-xl sm:text-2xl font-black text-gray-700 dark:text-gray-300 transition shadow-sm bg-white dark:bg-gray-800 whitespace-nowrap">
+                <i class="fa-solid fa-plus-circle mr-1.5"></i>수입
             </button>
         </div>
 
-        <div class="mb-6 bg-gray-50 dark:bg-[#2A2A2A] p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
-            <label id="label-date" class="block text-2xl font-black text-[#191919] dark:text-white mb-3">언제 쓰셨나요?</label>
-            <input type="date" id="input-date" class="w-full px-4 py-4 text-2xl font-black border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
+        <div class="mb-5 bg-gray-50 dark:bg-[#2A2A2A] p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
+            <label id="label-date" class="block text-xl font-black text-[#191919] dark:text-white mb-2">언제 쓰셨나요?</label>
+            <input type="date" id="input-date" class="w-full px-4 py-3 text-xl font-black border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
         </div>
 
-        <div class="mb-6 bg-gray-50 dark:bg-[#2A2A2A] p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
-            <div class="flex justify-between items-center mb-3">
-                <label id="label-amount" class="block text-2xl font-black text-[#191919] dark:text-white">얼마인가요?</label>
-                
-                <label class="bg-[#FEE500] text-[#191919] px-4 py-3 rounded-xl font-black text-lg shadow-md active:bg-[#e6cf00] cursor-pointer transition flex items-center">
-                    <i class="fa-solid fa-camera mr-2 text-xl"></i> 영수증 스캔
+        <div class="mb-5 bg-gray-50 dark:bg-[#2A2A2A] p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
+            <div class="flex justify-between items-center mb-3 gap-2">
+                <label id="label-amount" class="block text-xl font-black text-[#191919] dark:text-white shrink-0">얼마인가요?</label>
+                <label class="bg-[#FEE500] text-[#191919] px-3 py-2 rounded-xl font-black text-sm sm:text-base shadow-md active:bg-[#e6cf00] cursor-pointer transition flex items-center shrink-0 whitespace-nowrap">
+                    <i class="fa-solid fa-camera mr-1.5 text-lg"></i> 스캔
                     <input type="file" accept="image/*" capture="environment" id="input-camera" class="hidden" onchange="uploadReceipt(this)">
                 </label>
             </div>
             
             <div class="relative">
-                <input type="number" id="input-amount" placeholder="0" class="w-full px-5 py-5 text-4xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
-                <span class="absolute right-5 top-1/2 transform -translate-y-1/2 text-3xl font-black text-gray-500 dark:text-gray-400">원</span>
+                <input type="number" id="input-amount" placeholder="0" class="w-full px-4 py-4 text-3xl sm:text-4xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
+                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl sm:text-3xl font-black text-gray-500 dark:text-gray-400">원</span>
             </div>
         </div>
 
-        <div class="mb-6 bg-gray-50 dark:bg-[#2A2A2A] p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
-            <label id="label-category" class="block text-2xl font-black text-[#191919] dark:text-white mb-4">어디에 쓰셨나요?</label>
-            <div id="category-expense" class="grid grid-cols-3 gap-3">
-                <button class="category-btn selected py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="식비"><span class="text-4xl">🍚</span>식비</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="장보기"><span class="text-4xl">🛒</span>장보기</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="병원/약"><span class="text-4xl">💊</span>병원/약</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="교통/차량"><span class="text-4xl">🚗</span>차량</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="공과금"><span class="text-4xl">💡</span>공과금</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="기타지출"><span class="text-4xl">🎁</span>기타</button>
+        <div class="mb-5 bg-gray-50 dark:bg-[#2A2A2A] p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300 shadow-sm">
+            <label id="label-category" class="block text-xl font-black text-[#191919] dark:text-white mb-3">어디에 쓰셨나요?</label>
+            <div id="category-expense" class="grid grid-cols-3 gap-2">
+                <button class="category-btn selected py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="식비"><span class="text-3xl">🍚</span>식비</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="장보기"><span class="text-3xl">🛒</span>장보기</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="병원/약"><span class="text-3xl">💊</span>병원/약</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="교통/차량"><span class="text-3xl">🚗</span>차량</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="공과금"><span class="text-3xl">💡</span>공과금</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="기타지출"><span class="text-3xl">🎁</span>기타</button>
             </div>
-            <div id="category-income" class="grid grid-cols-3 gap-3 hidden">
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="월급"><span class="text-4xl">💼</span>월급</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="연금"><span class="text-4xl">🏦</span>연금</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="용돈"><span class="text-4xl">💌</span>용돈</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="이자수익"><span class="text-4xl">📈</span>이자</button>
-                <button class="category-btn py-5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-2 bg-white dark:bg-[#191919] transition" data-cat="기타수입"><span class="text-4xl">🎁</span>기타</button>
+            <div id="category-income" class="grid grid-cols-3 gap-2 hidden">
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="월급"><span class="text-3xl">💼</span>월급</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="연금"><span class="text-3xl">🏦</span>연금</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="용돈"><span class="text-3xl">💌</span>용돈</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="이자수익"><span class="text-3xl">📈</span>이자</button>
+                <button class="category-btn py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-base sm:text-lg font-bold text-gray-700 dark:text-gray-300 flex flex-col items-center gap-1 bg-white dark:bg-[#191919] transition whitespace-nowrap" data-cat="기타수입"><span class="text-3xl">🎁</span>기타</button>
             </div>
             
-            <label class="flex items-center mt-6 p-5 bg-white dark:bg-[#191919] rounded-xl border-2 border-gray-300 dark:border-gray-700 shadow-sm cursor-pointer active:bg-gray-100 dark:active:bg-gray-800 transition">
-                <input type="checkbox" id="input-fixed" class="w-8 h-8 text-[#FEE500] rounded border-gray-400 mr-4 focus:ring-[#FEE500]">
-                <span id="label-fixed" class="text-xl font-black text-[#191919] dark:text-white">매달 나가는 <strong class="text-red-500 dark:text-red-400">고정 지출</strong>이에요.</span>
+            <label class="flex items-center mt-5 p-4 bg-white dark:bg-[#191919] rounded-xl border-2 border-gray-300 dark:border-gray-700 shadow-sm cursor-pointer active:bg-gray-100 dark:active:bg-gray-800 transition">
+                <input type="checkbox" id="input-fixed" class="w-7 h-7 text-[#FEE500] rounded border-gray-400 mr-3 focus:ring-[#FEE500] shrink-0">
+                <span id="label-fixed" class="text-lg sm:text-xl font-black text-[#191919] dark:text-white">매달 나가는 <strong class="text-red-500 dark:text-red-400">고정 지출</strong>이에요.</span>
             </label>
         </div>
 
-        <div class="mb-8">
-            <label class="block text-2xl font-black text-[#191919] dark:text-white mb-3">메모 (선택)</label>
-            <input id="input-memo" type="text" placeholder="어디서 쓰셨나요?" class="w-full px-5 py-5 text-2xl font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
+        <div class="mb-6">
+            <label class="block text-xl font-black text-[#191919] dark:text-white mb-2">메모 (선택)</label>
+            <input id="input-memo" type="text" placeholder="어디서 쓰셨나요?" class="w-full px-4 py-4 text-xl font-bold border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
         </div>
 
-        <button onclick="saveData()" class="w-full kakao-bg text-[#191919] font-black text-3xl py-6 rounded-2xl shadow-xl active:bg-[#e5cd00] transition">
+        <button onclick="saveData()" class="w-full kakao-bg text-[#191919] font-black text-2xl sm:text-3xl py-5 rounded-2xl shadow-xl active:bg-[#e5cd00] transition">
             서버에 저장하기
         </button>
     </main>
 
     <!-- 2. 내역/통계 화면 -->
-    <main id="view-list" class="p-5 flex-1 hidden bg-gray-50 dark:bg-[#222222] overflow-y-auto pb-24 transition-colors duration-300">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-black text-[#191919] dark:text-white"><span id="stats-user-name" class="text-[#FEE500] drop-shadow-md">누구</span>의 이번 달</h2>
-            <button onclick="downloadExcel()" class="bg-green-600 text-white px-4 py-3 rounded-xl font-black text-lg shadow-md active:bg-green-700 transition">
-                <i class="fa-solid fa-file-excel mr-1"></i> 엑셀 저장
+    <main id="view-list" class="p-4 sm:p-5 flex-1 hidden bg-gray-50 dark:bg-[#222222] overflow-y-auto pb-24 transition-colors duration-300">
+        <div class="flex justify-between items-center mb-5 gap-2">
+            <h2 class="text-2xl sm:text-3xl font-black text-[#191919] dark:text-white truncate"><span id="stats-user-name" class="text-[#FEE500] drop-shadow-md">누구</span>의 이번 달</h2>
+            <button onclick="downloadExcel()" class="bg-green-600 text-white px-3 py-2 rounded-xl font-black text-sm sm:text-base shadow-md active:bg-green-700 transition shrink-0 whitespace-nowrap">
+                <i class="fa-solid fa-file-excel mr-1"></i>엑셀
             </button>
         </div>
         
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="bg-white dark:bg-[#2A2A2A] p-5 rounded-2xl shadow-md border-2 border-red-100 dark:border-red-900/50 text-center transition-colors">
-                <p class="text-gray-600 dark:text-gray-300 font-black mb-2 text-lg">총 지출</p>
-                <p class="text-3xl font-black text-red-600 dark:text-red-400" id="total-expense">0<span class="text-lg font-bold text-gray-500 dark:text-gray-400">원</span></p>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-white dark:bg-[#2A2A2A] p-4 rounded-2xl shadow-md border-2 border-red-100 dark:border-red-900/50 text-center transition-colors">
+                <p class="text-gray-600 dark:text-gray-300 font-black mb-1 text-base sm:text-lg">총 지출</p>
+                <p class="text-2xl sm:text-3xl font-black text-red-600 dark:text-red-400 truncate" id="total-expense">0</p>
             </div>
-            <div class="bg-white dark:bg-[#2A2A2A] p-5 rounded-2xl shadow-md border-2 border-blue-100 dark:border-blue-900/50 text-center transition-colors">
-                <p class="text-gray-600 dark:text-gray-300 font-black mb-2 text-lg">총 수입</p>
-                <p class="text-3xl font-black text-blue-600 dark:text-blue-400" id="total-income">0<span class="text-lg font-bold text-gray-500 dark:text-gray-400">원</span></p>
+            <div class="bg-white dark:bg-[#2A2A2A] p-4 rounded-2xl shadow-md border-2 border-blue-100 dark:border-blue-900/50 text-center transition-colors">
+                <p class="text-gray-600 dark:text-gray-300 font-black mb-1 text-base sm:text-lg">총 수입</p>
+                <p class="text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-400 truncate" id="total-income">0</p>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-[#2A2A2A] p-6 rounded-2xl shadow-md mb-8 border-2 border-gray-200 dark:border-gray-700 transition-colors">
-            <h3 class="text-2xl font-black text-[#191919] dark:text-white mb-4 text-center">어디에 가장 많이 썼을까요?</h3>
-            <div class="relative h-56 w-full flex justify-center">
+        <div class="bg-white dark:bg-[#2A2A2A] p-5 rounded-2xl shadow-md mb-6 border-2 border-gray-200 dark:border-gray-700 transition-colors">
+            <h3 class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white mb-3 text-center">어디에 가장 많이 썼을까요?</h3>
+            <div class="relative h-48 w-full flex justify-center">
                 <canvas id="expensePieChart"></canvas>
             </div>
         </div>
         
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-2xl font-black text-[#191919] dark:text-white">상세 내역</h3>
-            <button onclick="fetchTransactions()" class="kakao-bg text-[#191919] px-4 py-2 rounded-lg font-black text-lg shadow-sm active:bg-[#e5cd00]"><i class="fa-solid fa-rotate-right mr-1"></i> 새로고침</button>
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white">상세 내역</h3>
+            <button onclick="fetchTransactions()" class="kakao-bg text-[#191919] px-3 py-1.5 rounded-lg font-black text-sm sm:text-base shadow-sm active:bg-[#e5cd00] whitespace-nowrap"><i class="fa-solid fa-rotate-right mr-1"></i>새로고침</button>
         </div>
         <div id="transaction-list"></div>
     </main>
 
     <!-- 3. 차량 관리 화면 -->
-    <main id="view-car" class="p-5 flex-1 hidden bg-gray-50 dark:bg-[#222222] overflow-y-auto pb-24 transition-colors duration-300">
+    <main id="view-car" class="p-4 sm:p-5 flex-1 hidden bg-gray-50 dark:bg-[#222222] overflow-y-auto pb-24 transition-colors duration-300">
         
-        <div class="flex justify-between items-center mb-6 bg-white dark:bg-[#2A2A2A] p-3 rounded-2xl shadow-md border-2 border-gray-200 dark:border-gray-700 transition-colors">
-            <select id="vehicle-select" onchange="changeVehicle(this.value)" class="bg-transparent text-[#191919] dark:text-[#FEE500] text-2xl font-black focus:outline-none block w-full px-3 py-2">
+        <div class="flex justify-between items-center mb-5 bg-white dark:bg-[#2A2A2A] p-2 sm:p-3 rounded-2xl shadow-md border-2 border-gray-200 dark:border-gray-700 transition-colors">
+            <select id="vehicle-select" onchange="changeVehicle(this.value)" class="bg-transparent text-[#191919] dark:text-[#FEE500] text-xl sm:text-2xl font-black focus:outline-none block w-full px-2 py-1 truncate">
             </select>
-            <div class="flex gap-2 shrink-0 pr-2">
-                <button onclick="uiPromptAddVehicle()" class="kakao-bg text-[#191919] p-3 rounded-xl active:bg-[#e5cd00] text-2xl transition shadow"><i class="fa-solid fa-plus-circle"></i></button>
-                <button onclick="uiConfirmDeleteVehicle()" class="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-xl active:bg-red-100 text-2xl transition shadow"><i class="fa-solid fa-trash-can"></i></button>
+            <div class="flex gap-1.5 sm:gap-2 shrink-0 pr-1">
+                <button onclick="uiPromptAddVehicle()" class="kakao-bg text-[#191919] p-2.5 rounded-xl active:bg-[#e5cd00] text-xl transition shadow"><i class="fa-solid fa-plus-circle"></i></button>
+                <button onclick="uiConfirmDeleteVehicle()" class="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-2.5 rounded-xl active:bg-red-100 text-xl transition shadow"><i class="fa-solid fa-trash-can"></i></button>
             </div>
         </div>
 
         <div id="car-content" class="hidden">
-            <div class="text-center mb-8 mt-4">
-                <h2 id="display-car-name" class="text-4xl font-black text-[#191919] dark:text-white transition">차량 이름</h2>
-                <div id="display-car-plate" class="inline-block mt-3 bg-[#191919] dark:bg-[#FEE500] text-[#FEE500] dark:text-[#191919] font-black px-5 py-2 rounded-xl text-xl shadow-lg border-2 border-[#191919] dark:border-[#FEE500]">12가 3456</div>
+            <div class="text-center mb-6 mt-2">
+                <h2 id="display-car-name" class="text-3xl sm:text-4xl font-black text-[#191919] dark:text-white transition whitespace-nowrap">차량 이름</h2>
+                <div id="display-car-plate" class="inline-block mt-2 bg-[#191919] dark:bg-[#FEE500] text-[#FEE500] dark:text-[#191919] font-black px-4 py-1.5 rounded-xl text-lg sm:text-xl shadow-lg border-2 border-[#191919] dark:border-[#FEE500] whitespace-nowrap">12가 3456</div>
             </div>
 
-            <div class="bg-white dark:bg-[#2A2A2A] p-6 rounded-2xl shadow-md mb-8 border-2 border-gray-200 dark:border-gray-700 transition">
-                <label class="block text-[#191919] dark:text-white font-black text-2xl mb-4">현재 계기판 주행거리</label>
-                <div class="flex flex-col gap-4 w-full">
+            <div class="bg-white dark:bg-[#2A2A2A] p-5 rounded-2xl shadow-md mb-6 border-2 border-gray-200 dark:border-gray-700 transition">
+                <label class="block text-[#191919] dark:text-white font-black text-xl mb-3">현재 계기판 주행거리</label>
+                <div class="flex flex-col gap-3 w-full">
                     <div class="relative w-full">
-                        <input type="number" id="car-current-km" class="w-full px-5 py-5 text-4xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] bg-gray-50 dark:bg-[#191919] dark:text-white transition">
-                        <span class="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 font-black text-2xl">km</span>
+                        <input type="number" id="car-current-km" class="w-full px-4 py-4 text-3xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] bg-gray-50 dark:bg-[#191919] dark:text-white transition">
+                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-black text-xl">km</span>
                     </div>
-                    <button onclick="updateMileage()" class="kakao-bg text-[#191919] font-black w-full py-5 rounded-xl text-2xl active:bg-[#e5cd00] shadow-md transition">
+                    <button onclick="updateMileage()" class="kakao-bg text-[#191919] font-black w-full py-4 rounded-xl text-xl active:bg-[#e5cd00] shadow-md transition whitespace-nowrap">
                         업데이트
                     </button>
                 </div>
             </div>
 
-            <h3 class="text-2xl font-black text-[#191919] dark:text-white mb-4">소모품 교체 주기</h3>
-            <div id="consumables-list" class="space-y-5"></div>
+            <h3 class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white mb-3">소모품 교체 주기</h3>
+            <div id="consumables-list" class="space-y-4"></div>
         </div>
         
-        <div id="no-car-message" class="text-center py-16 hidden">
-            <div class="text-7xl mb-6">🚗</div>
-            <p class="text-2xl font-black text-[#191919] dark:text-white mb-3">등록된 차량이 없습니다.</p>
-            <p class="text-lg font-bold text-gray-500 dark:text-gray-400">상단의 [+] 버튼을 눌러 추가해주세요.</p>
+        <div id="no-car-message" class="text-center py-12 hidden">
+            <div class="text-6xl mb-4">🚗</div>
+            <p class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white mb-2 whitespace-nowrap">등록된 차량이 없습니다.</p>
+            <p class="text-base sm:text-lg font-bold text-gray-500 dark:text-gray-400">상단의 [+] 버튼을 눌러 추가해주세요.</p>
         </div>
     </main>
 
-    <!-- 커스텀 모달들 (디자인 보강) -->
+    <!-- 커스텀 모달 (가족 선택) -->
     <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#2A2A2A] w-full max-w-sm mx-auto rounded-3xl shadow-2xl p-7 flex flex-col transition-colors border-4 border-[#FEE500]" style="max-h: 80vh;">
-            <h2 class="text-3xl font-black text-[#191919] dark:text-white mb-6 text-center shrink-0">누가 기록하시나요?</h2>
-            <div id="user-list" class="flex-1 overflow-y-auto space-y-4 mb-6 pr-2"></div>
-            <div class="flex gap-3 mb-6 shrink-0">
-                <input type="text" id="new-user-name" placeholder="새 가족 이름" class="w-full min-w-0 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl px-5 py-4 font-black text-xl focus:outline-none focus:border-[#FEE500] transition">
-                <button onclick="addUser()" class="kakao-bg text-[#191919] px-6 rounded-xl font-black text-xl active:bg-[#e5cd00] shrink-0 transition shadow">추가</button>
+        <div class="bg-white dark:bg-[#2A2A2A] w-full max-w-sm mx-auto rounded-3xl shadow-2xl p-6 flex flex-col transition-colors border-4 border-[#FEE500]" style="max-h: 80vh;">
+            <h2 class="text-2xl sm:text-3xl font-black text-[#191919] dark:text-white mb-5 text-center shrink-0">누가 기록하시나요?</h2>
+            <div id="user-list" class="flex-1 overflow-y-auto space-y-3 mb-5 pr-2"></div>
+            <div class="flex gap-2 mb-5 shrink-0">
+                <input type="text" id="new-user-name" placeholder="새 가족 이름" class="w-full min-w-0 border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl px-4 py-3 font-black text-lg focus:outline-none focus:border-[#FEE500] transition">
+                <button onclick="addUser()" class="kakao-bg text-[#191919] px-5 rounded-xl font-black text-lg active:bg-[#e5cd00] shrink-0 transition shadow whitespace-nowrap">추가</button>
             </div>
-            <button onclick="closeUserModal()" class="w-full py-5 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white font-black text-2xl rounded-2xl active:bg-gray-300 transition shadow">닫기</button>
+            <button onclick="closeUserModal()" class="w-full py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white font-black text-xl rounded-2xl active:bg-gray-300 transition shadow whitespace-nowrap">닫기</button>
         </div>
     </div>
 
     <!-- 범용 확인 창 -->
     <div id="custom-confirm" class="fixed inset-0 bg-black bg-opacity-70 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl transition-colors border-4 border-[#FEE500]">
-            <p id="confirm-msg" class="text-2xl font-black mb-8 text-[#191919] dark:text-white whitespace-pre-line leading-relaxed"></p>
-            <div class="flex gap-4">
-                <button onclick="closeConfirmModal()" class="flex-1 py-5 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-xl active:bg-gray-300 transition">취소</button>
-                <button id="confirm-ok-btn" class="flex-1 py-5 kakao-bg text-[#191919] rounded-xl font-black text-xl active:bg-[#e5cd00] transition shadow">확인</button>
+        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-6 sm:p-8 w-full max-w-sm text-center shadow-2xl transition-colors border-4 border-[#FEE500]">
+            <p id="confirm-msg" class="text-xl sm:text-2xl font-black mb-6 text-[#191919] dark:text-white whitespace-pre-line leading-relaxed"></p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirmModal()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition whitespace-nowrap">취소</button>
+                <button id="confirm-ok-btn" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition shadow whitespace-nowrap">확인</button>
             </div>
         </div>
     </div>
 
     <!-- 차량 등록 창 -->
     <div id="custom-prompt-car" class="fixed inset-0 bg-black bg-opacity-70 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
-            <h2 class="text-3xl font-black text-[#191919] dark:text-white mb-6 text-center">차량 등록</h2>
-            <div class="mb-5">
-                <label class="block font-black text-xl text-[#191919] dark:text-gray-200 mb-2">차량 이름</label>
-                <input type="text" id="prompt-car-name" placeholder="예: 쏘나타" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-4 text-2xl font-black transition focus:border-[#FEE500]">
+        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
+            <h2 class="text-2xl sm:text-3xl font-black text-[#191919] dark:text-white mb-5 text-center">차량 등록</h2>
+            <div class="mb-4">
+                <label class="block font-black text-lg sm:text-xl text-[#191919] dark:text-gray-200 mb-2">차량 이름</label>
+                <input type="text" id="prompt-car-name" placeholder="예: 쏘나타" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
             </div>
-            <div class="mb-8">
-                <label class="block font-black text-xl text-[#191919] dark:text-gray-200 mb-2">차량 번호</label>
-                <input type="text" id="prompt-car-plate" placeholder="예: 12가 3456" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-4 text-2xl font-black transition focus:border-[#FEE500]">
+            <div class="mb-6">
+                <label class="block font-black text-lg sm:text-xl text-[#191919] dark:text-gray-200 mb-2">차량 번호</label>
+                <input type="text" id="prompt-car-plate" placeholder="예: 12가 3456" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
             </div>
-            <div class="flex gap-4">
-                <button onclick="closePromptCar()" class="flex-1 py-5 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-xl active:bg-gray-300 transition">취소</button>
-                <button onclick="executeAddVehicle()" class="flex-1 py-5 kakao-bg text-[#191919] rounded-xl font-black text-xl active:bg-[#e5cd00] transition shadow">등록</button>
+            <div class="flex gap-3">
+                <button onclick="closePromptCar()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition whitespace-nowrap">취소</button>
+                <button onclick="executeAddVehicle()" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition shadow whitespace-nowrap">등록</button>
             </div>
         </div>
     </div>
 
     <!-- 숫자 입력 수정 창 -->
     <div id="custom-prompt-num" class="fixed inset-0 bg-black bg-opacity-70 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
-            <h2 id="prompt-num-title" class="text-2xl font-black text-[#191919] dark:text-white mb-6 text-center">수정</h2>
-            <input type="number" id="prompt-num-input" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-5 text-3xl font-black text-center mb-8 focus:border-[#FEE500] transition">
-            <div class="flex gap-4">
-                <button onclick="closePromptNum()" class="flex-1 py-5 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-xl active:bg-gray-300 transition">취소</button>
-                <button id="prompt-num-ok-btn" class="flex-1 py-5 kakao-bg text-[#191919] rounded-xl font-black text-xl active:bg-[#e5cd00] transition shadow">저장</button>
+        <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
+            <h2 id="prompt-num-title" class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white mb-5 text-center">수정</h2>
+            <input type="number" id="prompt-num-input" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-4 text-2xl sm:text-3xl font-black text-center mb-6 focus:border-[#FEE500] transition">
+            <div class="flex gap-3">
+                <button onclick="closePromptNum()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition whitespace-nowrap">취소</button>
+                <button id="prompt-num-ok-btn" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition shadow whitespace-nowrap">저장</button>
             </div>
         </div>
     </div>
 
     <!-- 토스트 메시지 -->
-    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 kakao-bg text-[#191919] px-6 py-4 rounded-full text-xl font-black shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-[70] whitespace-nowrap border-2 border-[#191919]">
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 kakao-bg text-[#191919] px-5 py-3 rounded-full text-lg font-black shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-[70] whitespace-nowrap border-2 border-[#191919]">
         ✅ 성공!
     </div>
 </div>
@@ -302,7 +299,7 @@
     let pieChartInstance = null;
 
     /* =====================================================================
-       [뒤로가기 제어 로직 - 모바일 전용]
+       [뒤로가기 제어 및 탭 유지 로직]
        ===================================================================== */
     let backPressedOnce = false;
 
@@ -325,6 +322,8 @@
         if (history.state && history.state.tab !== tabName) {
             history.pushState({ tab: tabName }, "", "");
         }
+        // 로컬스토리지에 마지막 탭 저장 (새로고침 시 유지용)
+        localStorage.setItem('family_ledger_last_tab', tabName);
         switchTabUI(tabName);
     }
 
@@ -340,7 +339,7 @@
 
 
     /* =====================================================================
-       [서버 동기화 & 실시간 통신 (웹소켓)]
+       [서버 동기화 & 실시간 통신 & 로컬 이중화 (완벽 백업)]
        ===================================================================== */
     let ws;
 
@@ -380,7 +379,6 @@
     async function fetchTransactions() {
         if(!API_BASE_URL) return updateServerStatus(false);
         try {
-            // 캐시 방지 코드가 추가되었습니다.
             const ts = new Date().getTime();
             const response = await fetch(`${API_BASE_URL}/api/transactions?t=${ts}`, { cache: 'no-store' });
             if (response.ok) {
@@ -394,7 +392,6 @@
     async function fetchSettings() {
         if(!API_BASE_URL) return;
         try {
-            // 캐시 방지 코드가 추가되었습니다. (모바일 브라우저 강제 새로고침)
             const ts = new Date().getTime();
             
             // 유저 세팅 가져오기
@@ -402,7 +399,12 @@
             if(resU.ok) {
                 const dataU = await resU.json();
                 if(dataU.value) {
-                    state.users = JSON.parse(dataU.value);
+                    const parsed = JSON.parse(dataU.value);
+                    if(parsed && parsed.length > 0) {
+                        state.users = parsed;
+                        // 가져온 값을 로컬에도 확실히 이중 백업
+                        localStorage.setItem('family_ledger_users', JSON.stringify(state.users));
+                    }
                     if(!state.users.includes(state.currentUser)) {
                         state.currentUser = state.users[0];
                         updateUIForUser();
@@ -415,16 +417,26 @@
             if(resV.ok) {
                 const dataV = await resV.json();
                 if(dataV.value) {
-                    state.vehicles = JSON.parse(dataV.value);
+                    const parsed = JSON.parse(dataV.value);
+                    if(parsed) {
+                        state.vehicles = parsed;
+                        // 로컬 이중 백업
+                        localStorage.setItem('family_ledger_vehicles', JSON.stringify(state.vehicles));
+                    }
                     if(document.getElementById('view-car').classList.contains('hidden') === false) {
                         renderCar();
                     }
                 }
             }
-        } catch (error) { console.error("설정 동기화 실패", error); }
+        } catch (error) { 
+            console.warn("설정 동기화 실패. 로컬 데이터로 임시 구동합니다.", error); 
+        }
     }
 
     async function saveSettings(key, valueObj) {
+        // [방어 로직] 1. 일단 무조건 스마트폰 로컬에 저장하여 증발 방지
+        localStorage.setItem(`family_ledger_${key}`, JSON.stringify(valueObj));
+        
         if(!API_BASE_URL) return;
         try {
             const res = await fetch(`${API_BASE_URL}/api/settings/${key}`, {
@@ -433,22 +445,36 @@
                 body: JSON.stringify({ value: JSON.stringify(valueObj) })
             });
             if(res.ok) {
-                await fetchSettings(); // 저장 성공 시 확실하게 재동기화
+                await fetchSettings(); 
             } else {
-                showToast("❌ 서버 저장에 실패했습니다.");
+                showToast("⚠️ 서버 설정 반영 지연(기기에는 임시 저장됨)");
             }
-        } catch (error) { console.error("설정 저장 에러", error); }
+        } catch (error) { 
+            console.warn("설정 저장 에러", error);
+            showToast("⚠️ 서버 오프라인(기기에는 안전하게 저장됨)");
+        }
     }
 
     /* =====================================================================
        [초기화 및 앱 로직]
        ===================================================================== */
     window.addEventListener('load', async () => {
-        history.pushState({ tab: 'input' }, "", "");
+        // [방어 로직] 2. 화면을 켜자마자 로컬 백업이 있으면 먼저 불러와서 번쩍거림 방지
+        const localUsers = localStorage.getItem('family_ledger_users');
+        if(localUsers) state.users = JSON.parse(localUsers);
+        
+        const localVehicles = localStorage.getItem('family_ledger_vehicles');
+        if(localVehicles) state.vehicles = JSON.parse(localVehicles);
+
+        // 마지막 보던 탭으로 시작점 세팅
+        const lastTab = localStorage.getItem('family_ledger_last_tab') || 'input';
+        history.pushState({ tab: lastTab }, "", "");
+        switchTabUI(lastTab);
 
         initTheme(); 
         document.getElementById('input-date').valueAsDate = new Date();
         
+        // 데이터 통신 시도 (성공하면 로컬 데이터를 덮어쓰고, 실패해도 로컬은 유지됨)
         await fetchSettings();
         await fetchTransactions();
         
@@ -483,13 +509,13 @@
         state.users.forEach(u => {
             const isSelected = u === state.currentUser;
             listEl.innerHTML += `
-                <div class="flex items-center justify-between p-4 rounded-xl border-2 ${isSelected ? 'border-[#FEE500] bg-[#FFF8B3] dark:bg-[#4A4315]' : 'border-gray-200 bg-white dark:bg-[#191919] dark:border-gray-600'}">
-                    <div onclick="setUser('${u}')" class="flex-1 text-left text-2xl font-black cursor-pointer ${isSelected ? 'text-[#191919] dark:text-[#FEE500]' : 'text-gray-700 dark:text-gray-300'}">
+                <div class="flex items-center justify-between p-3 sm:p-4 rounded-xl border-2 ${isSelected ? 'border-[#FEE500] bg-[#FFF8B3] dark:bg-[#4A4315]' : 'border-gray-200 bg-white dark:bg-[#191919] dark:border-gray-600'}">
+                    <div onclick="setUser('${u}')" class="flex-1 text-left text-xl sm:text-2xl font-black cursor-pointer ${isSelected ? 'text-[#191919] dark:text-[#FEE500]' : 'text-gray-700 dark:text-gray-300'} whitespace-nowrap overflow-hidden text-ellipsis">
                         ${isSelected ? '✅ ' : ''}${u}
                     </div>
                     ${state.users.length > 1 ? `
-                    <button onclick="handleDeleteUser(event, '${u}')" class="text-red-500 px-4 py-3 bg-red-50 dark:bg-red-900/30 rounded-lg active:bg-red-100 dark:active:bg-red-800 transition">
-                        <i class="fa-solid fa-trash text-xl"></i>
+                    <button onclick="handleDeleteUser(event, '${u}')" class="text-red-500 px-3 py-2 sm:px-4 sm:py-3 bg-red-50 dark:bg-red-900/30 rounded-lg active:bg-red-100 dark:active:bg-red-800 transition shrink-0">
+                        <i class="fa-solid fa-trash text-lg sm:text-xl"></i>
                     </button>` : ''}
                 </div>
             `;
@@ -636,21 +662,21 @@
             const isExp = t.type === 'expense';
             const color = isExp ? 'red' : 'blue';
             const sign = isExp ? '-' : '+';
-            const fixedBadge = isFixedVal ? `<span class="ml-2 text-sm bg-${color}-100 dark:bg-${color}-900 text-${color}-700 dark:text-${color}-200 px-2 py-1 rounded-md align-middle"><i class="fa-solid fa-thumbtack mr-1"></i>고정</span>` : '';
+            const fixedBadge = isFixedVal ? `<span class="ml-2 text-sm bg-${color}-100 dark:bg-${color}-900 text-${color}-700 dark:text-${color}-200 px-2 py-1 rounded-md align-middle whitespace-nowrap"><i class="fa-solid fa-thumbtack mr-1"></i>고정</span>` : '';
 
             listEl.innerHTML += `
-                <div class="bg-white dark:bg-[#191919] rounded-xl shadow-md p-5 mb-4 border-l-8 border-${color}-500 transition-colors">
-                    <div class="text-gray-500 dark:text-gray-400 text-base font-black flex items-center">
+                <div class="bg-white dark:bg-[#191919] rounded-xl shadow-md p-4 sm:p-5 mb-4 border-l-8 border-${color}-500 transition-colors flex flex-col gap-1">
+                    <div class="text-gray-500 dark:text-gray-400 text-sm sm:text-base font-black flex items-center whitespace-nowrap">
                         ${t.date} ${fixedBadge}
                     </div>
-                    <div class="text-2xl font-black mt-2 dark:text-white">${t.category} <span class="text-lg text-gray-500 dark:text-gray-400 font-bold ml-2">${t.memo || ''}</span></div>
-                    <div class="text-3xl font-black text-${color}-600 dark:text-${color}-400 mt-3">${sign} ${t.amount.toLocaleString()}원</div>
+                    <div class="text-xl sm:text-2xl font-black dark:text-white truncate w-full">${t.category} <span class="text-base sm:text-lg text-gray-500 dark:text-gray-400 font-bold ml-1">${t.memo || ''}</span></div>
+                    <div class="text-2xl sm:text-3xl font-black text-${color}-600 dark:text-${color}-400 mt-1 whitespace-nowrap">${sign} ${t.amount.toLocaleString()}원</div>
                 </div>
             `;
         });
 
-        document.getElementById('total-expense').innerHTML = `${expTotal.toLocaleString()}<span class="text-lg font-bold text-gray-500 dark:text-gray-400 ml-1">원</span>`;
-        document.getElementById('total-income').innerHTML = `${incTotal.toLocaleString()}<span class="text-lg font-bold text-gray-500 dark:text-gray-400 ml-1">원</span>`;
+        document.getElementById('total-expense').innerHTML = `${expTotal.toLocaleString()}<span class="text-base sm:text-lg font-bold text-gray-500 dark:text-gray-400 ml-1">원</span>`;
+        document.getElementById('total-income').innerHTML = `${incTotal.toLocaleString()}<span class="text-base sm:text-lg font-bold text-gray-500 dark:text-gray-400 ml-1">원</span>`;
         
         drawPieChart(expenseChartData);
     }
@@ -751,23 +777,23 @@
             else if (percent >= 70) { statusColor = 'orange'; statusText = '점검 필요'; }
 
             listEl.innerHTML += `
-                <div class="bg-white dark:bg-[#191919] p-6 rounded-2xl shadow-md mb-5 border-2 border-gray-100 dark:border-gray-700 transition-colors">
-                    <div class="flex justify-between items-end mb-3">
-                        <div>
-                            <h4 class="text-2xl font-black text-[#191919] dark:text-gray-200"><i class="fa-solid ${c.icon} text-gray-600 dark:text-gray-400 mr-2 w-8"></i>${c.name}</h4>
-                            <p class="text-base font-bold text-gray-500 dark:text-gray-400 mt-2">권장: ${c.desc}</p>
+                <div class="bg-white dark:bg-[#191919] p-4 sm:p-5 rounded-2xl shadow-md mb-4 border-2 border-gray-100 dark:border-gray-700 transition-colors">
+                    <div class="flex justify-between items-end mb-2 sm:mb-3">
+                        <div class="shrink min-w-0 pr-2">
+                            <h4 class="text-xl sm:text-2xl font-black text-[#191919] dark:text-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"><i class="fa-solid ${c.icon} text-gray-600 dark:text-gray-400 mr-1.5 w-6 sm:w-8"></i>${c.name}</h4>
+                            <p class="text-sm sm:text-base font-bold text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 whitespace-nowrap overflow-hidden text-ellipsis">권장: ${c.desc}</p>
                         </div>
-                        <div class="text-right">
-                            <p class="text-${statusColor}-500 font-black text-2xl">${statusText}</p>
-                            <p class="text-sm font-bold text-gray-400 mt-2 cursor-pointer hover:text-[#FEE500] bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg" onclick="editLastKm('${c.id}')">
-                                마지막: <strong class="text-[#191919] dark:text-white">${c.lastKm.toLocaleString()}</strong>km <i class="fa-solid fa-pen ml-1"></i>
+                        <div class="text-right shrink-0">
+                            <p class="text-${statusColor}-500 font-black text-xl sm:text-2xl whitespace-nowrap">${statusText}</p>
+                            <p class="text-xs sm:text-sm font-bold text-gray-400 mt-1 sm:mt-2 cursor-pointer hover:text-[#FEE500] bg-gray-100 dark:bg-gray-700 px-2 py-1 sm:px-3 sm:py-2 rounded-lg whitespace-nowrap" onclick="editLastKm('${c.id}')">
+                                최근: <strong class="text-[#191919] dark:text-white">${c.lastKm.toLocaleString()}</strong>km <i class="fa-solid fa-pen ml-1"></i>
                             </p>
                         </div>
                     </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 mt-4 overflow-hidden border-2 border-gray-300 dark:border-gray-600 shadow-inner">
-                        <div class="bg-${statusColor}-500 h-6 rounded-full progress-bar-fill relative" style="width: ${percent}%"></div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-5 sm:h-6 mt-3 sm:mt-4 overflow-hidden border-2 border-gray-300 dark:border-gray-600 shadow-inner">
+                        <div class="bg-${statusColor}-500 h-5 sm:h-6 rounded-full progress-bar-fill relative" style="width: ${percent}%"></div>
                     </div>
-                    <button onclick="uiConfirmReplaceConsumable('${c.id}')" class="mt-5 w-full py-4 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-[#191919] dark:text-white font-black rounded-xl active:bg-gray-100 flex justify-center items-center gap-2 transition text-lg shadow-sm">
+                    <button onclick="uiConfirmReplaceConsumable('${c.id}')" class="mt-4 sm:mt-5 w-full py-3 sm:py-4 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-[#191919] dark:text-white font-black rounded-xl active:bg-gray-100 flex justify-center items-center gap-2 transition text-base sm:text-lg shadow-sm whitespace-nowrap">
                         <i class="fa-solid fa-wrench"></i> 이 항목 오늘 교체했어요
                     </button>
                 </div>
