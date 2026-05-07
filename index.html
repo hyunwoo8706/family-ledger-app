@@ -45,7 +45,6 @@
 
 <div class="max-w-md mx-auto bg-white dark:bg-[#222222] min-h-screen shadow-lg flex flex-col relative overflow-hidden transition-colors duration-300">
     
-    <!-- 헤더 -->
     <header class="kakao-bg dark:bg-[#111111] px-4 sm:px-5 py-3 border-b border-[#E5CD00] dark:border-gray-800 sticky top-0 z-20 flex justify-between items-center shadow-md transition-colors duration-300">
         <h1 class="text-2xl sm:text-3xl font-black kakao-text dark:text-[#FEE500] whitespace-nowrap shrink-0 transition-colors duration-300">🏠 가계부</h1>
         <div class="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -62,7 +61,6 @@
         </div>
     </header>
 
-    <!-- 탭 네비게이션 -->
     <div class="flex border-b dark:border-gray-700 text-lg sm:text-xl bg-white dark:bg-[#222222] shrink-0 z-10 relative transition-colors duration-300">
         <button onclick="switchTab('input')" id="tab-input" class="tab-btn active flex-1 py-4 text-center text-gray-500 dark:text-gray-300 font-bold transition whitespace-nowrap">기록하기</button>
         <button onclick="switchTab('list')" id="tab-list" class="tab-btn flex-1 py-4 text-center text-gray-500 dark:text-gray-300 font-bold transition whitespace-nowrap">내역/통계</button>
@@ -93,7 +91,6 @@
                     <input type="file" accept="image/*" capture="environment" id="input-camera" class="hidden" onchange="uploadReceipt(this)">
                 </label>
             </div>
-            
             <div class="relative">
                 <input type="number" id="input-amount" placeholder="0" class="w-full px-4 py-4 text-3xl sm:text-4xl font-black text-right border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-[#FEE500] dark:focus:border-[#FEE500] bg-white dark:bg-[#191919] dark:text-white transition-colors duration-300">
                 <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl sm:text-3xl font-black text-gray-500 dark:text-gray-400">원</span>
@@ -170,7 +167,6 @@
 
     <!-- 3. 차량 관리 화면 -->
     <main id="view-car" class="p-4 sm:p-5 flex-1 hidden bg-gray-50 dark:bg-[#222222] overflow-y-auto pb-24 transition-colors duration-300">
-        
         <div class="flex justify-between items-center mb-5 bg-white dark:bg-[#2A2A2A] p-2 sm:p-3 rounded-2xl shadow-md border-2 border-gray-200 dark:border-gray-700 transition-colors">
             <select id="vehicle-select" onchange="changeVehicle(this.value)" class="bg-transparent text-[#191919] dark:text-[#FEE500] text-xl sm:text-2xl font-black focus:outline-none block w-full px-2 py-1 truncate">
             </select>
@@ -210,7 +206,7 @@
         </div>
     </main>
 
-    <!-- 커스텀 모달 (가족 선택) -->
+    <!-- 모달: 가족 설정 -->
     <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-[#2A2A2A] w-full max-w-sm mx-auto rounded-3xl shadow-2xl p-6 flex flex-col transition-colors border-4 border-[#FEE500]" style="max-h: 80vh;">
             <h2 class="text-2xl sm:text-3xl font-black text-[#191919] dark:text-white mb-5 text-center shrink-0">누가 기록하시나요?</h2>
@@ -234,33 +230,34 @@
         </div>
     </div>
 
-    <!-- 차량 등록 창 -->
+    <!-- 기타 모달 (등록/수정) -->
     <div id="custom-prompt-car" class="fixed inset-0 bg-black bg-opacity-70 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
             <h2 class="text-2xl sm:text-3xl font-black text-[#191919] dark:text-white mb-5 text-center">차량 등록</h2>
             <div class="mb-4">
                 <label class="block font-black text-lg sm:text-xl text-[#191919] dark:text-gray-200 mb-2">차량 이름</label>
-                <input type="text" id="prompt-car-name" placeholder="예: 쏘나타" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
+                <input type="text" id="prompt-car-name" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
             </div>
             <div class="mb-6">
                 <label class="block font-black text-lg sm:text-xl text-[#191919] dark:text-gray-200 mb-2">차량 번호</label>
-                <input type="text" id="prompt-car-plate" placeholder="예: 12가 3456" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
+                <input type="text" id="prompt-car-plate" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-3 sm:p-4 text-xl font-black transition focus:border-[#FEE500]">
             </div>
             <div class="flex gap-3">
-                <button onclick="closePromptCar()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition whitespace-nowrap">취소</button>
-                <button onclick="executeAddVehicle()" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition shadow whitespace-nowrap">등록</button>
+                <button onclick="closePromptCar()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition">취소</button>
+                <button onclick="executeAddVehicle()" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition">등록</button>
             </div>
         </div>
     </div>
 
-    <!-- 숫자 입력 수정 창 -->
+    <!-- 숫자(또는 텍스트) 입력 수정 창 -->
     <div id="custom-prompt-num" class="fixed inset-0 bg-black bg-opacity-70 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-[#2A2A2A] rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl transition-colors border-4 border-[#FEE500]">
             <h2 id="prompt-num-title" class="text-xl sm:text-2xl font-black text-[#191919] dark:text-white mb-5 text-center">수정</h2>
-            <input type="number" id="prompt-num-input" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-4 text-2xl sm:text-3xl font-black text-center mb-6 focus:border-[#FEE500] transition">
+            <!-- 금액용/일반용(메모) 분리 처리하기 위해 타입을 text로 통일 후 JS에서 변환 -->
+            <input type="text" id="prompt-num-input" class="w-full border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#191919] dark:text-white rounded-xl p-4 text-2xl sm:text-3xl font-black text-center mb-6 focus:border-[#FEE500] transition">
             <div class="flex gap-3">
-                <button onclick="closePromptNum()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition whitespace-nowrap">취소</button>
-                <button id="prompt-num-ok-btn" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition shadow whitespace-nowrap">저장</button>
+                <button onclick="closePromptNum()" class="flex-1 py-4 bg-gray-200 dark:bg-gray-700 text-[#191919] dark:text-white rounded-xl font-black text-lg sm:text-xl active:bg-gray-300 transition">취소</button>
+                <button id="prompt-num-ok-btn" class="flex-1 py-4 kakao-bg text-[#191919] rounded-xl font-black text-lg sm:text-xl active:bg-[#e5cd00] transition">저장</button>
             </div>
         </div>
     </div>
@@ -277,10 +274,10 @@
     
     let state = {
         currentUser: '',
-        users: ['어머니', '아버지', '아들', '딸'], // 기본값
+        users: ['어머니', '아버지', '아들', '딸'],
         transactions: [],
         vehicles: [], 
-        kakaoMap: {}, // 신규: 카카오톡 ID 매핑 객체 저장소
+        kakaoMap: {}, 
         currentVehicleId: null,
         currentType: 'expense',
         currentCategory: '식비',
@@ -298,10 +295,6 @@
     ];
 
     let pieChartInstance = null;
-
-    /* =====================================================================
-       [뒤로가기 제어 및 탭 유지 로직]
-       ===================================================================== */
     let backPressedOnce = false;
 
     window.addEventListener('popstate', function(event) {
@@ -323,7 +316,6 @@
         if (history.state && history.state.tab !== tabName) {
             history.pushState({ tab: tabName }, "", "");
         }
-        // 로컬스토리지에 마지막 탭 저장 (새로고침 시 유지용)
         localStorage.setItem('family_ledger_last_tab', tabName);
         switchTabUI(tabName);
     }
@@ -338,9 +330,8 @@
         if(tabName === 'car') renderCar();
     }
 
-
     /* =====================================================================
-       [서버 동기화 & 실시간 통신 & 무적의 백업 로직 추가]
+       [서버 동기화 (강력한 이중화 캐시 무력화 적용)]
        ===================================================================== */
     let ws;
 
@@ -348,27 +339,21 @@
         if(!API_BASE_URL) return;
         const wsProtocol = API_BASE_URL.startsWith("https") ? "wss://" : "ws://";
         const wsUrl = API_BASE_URL.replace(/^https?:\/\//, wsProtocol) + "/ws";
-        
         try {
             ws = new WebSocket(wsUrl);
-            ws.onopen = () => console.log("웹소켓(실시간 알림) 연결 성공!");
-            
             ws.onmessage = (event) => {
-                if(event.data === "SYS_REFRESH_SETTINGS") {
-                    fetchSettings();
+                if(event.data.includes("SYS_REFRESH")) {
+                    fetchSettings(); fetchTransactions();
                 } else {
                     showToast("🔔 " + event.data);
                     fetchTransactions(); 
                 }
             };
-
             ws.onclose = () => { setTimeout(connectWebSocket, 3000); };
-        } catch (error) {
-            console.log("웹소켓 연결 실패. 폴링 모드로 전환합니다.");
-        }
+        } catch (error) { console.log("웹소켓 연결 실패. 폴링 유지"); }
     }
 
-    // [수정됨] 무조건 5초마다 강제 동기화 (PC-모바일 완벽 연동 보장)
+    // 5초마다 무조건 서버와 통신 (동기화 지연 방지)
     setInterval(() => {
         fetchTransactions();
         fetchSettings();
@@ -376,22 +361,19 @@
 
     function updateServerStatus(isOnline) {
         const dot = document.getElementById('status-dot');
-        if (isOnline) {
-            dot.classList.remove('bg-red-500'); dot.classList.add('bg-green-500');
-        } else {
-            dot.classList.remove('bg-green-500'); dot.classList.add('bg-red-500');
-        }
+        if (isOnline) { dot.classList.remove('bg-red-500'); dot.classList.add('bg-green-500'); } 
+        else { dot.classList.remove('bg-green-500'); dot.classList.add('bg-red-500'); }
     }
 
     async function fetchTransactions() {
         if(!API_BASE_URL) return updateServerStatus(false);
         try {
-            const ts = new Date().getTime();
+            const ts = new Date().getTime(); // 캐시 완전 무력화
             const response = await fetch(`${API_BASE_URL}/api/transactions?t=${ts}`, { cache: 'no-store' });
             if (response.ok) {
                 state.transactions = await response.json();
                 updateServerStatus(true);
-                renderList();
+                if(document.getElementById('view-list').classList.contains('hidden') === false) renderList();
             } else { updateServerStatus(false); }
         } catch (error) { updateServerStatus(false); }
     }
@@ -399,9 +381,7 @@
     async function fetchSettings() {
         if(!API_BASE_URL) return;
         try {
-            const ts = new Date().getTime();
-            
-            // 유저 세팅 가져오기
+            const ts = new Date().getTime(); // 캐시 완전 무력화
             const resU = await fetch(`${API_BASE_URL}/api/settings/users?t=${ts}`, { cache: 'no-store' });
             if(resU.ok) {
                 const dataU = await resU.json();
@@ -409,7 +389,6 @@
                     const parsed = JSON.parse(dataU.value);
                     if(parsed && parsed.length > 0) {
                         state.users = parsed;
-                        // 가져온 값을 로컬에도 확실히 이중 백업
                         localStorage.setItem('family_ledger_users', JSON.stringify(state.users));
                     }
                     if(!state.users.includes(state.currentUser)) {
@@ -418,8 +397,7 @@
                     }
                 }
             }
-
-            // [신규] 카카오 매핑 세팅 가져오기
+            
             const resK = await fetch(`${API_BASE_URL}/api/settings/kakao_map?t=${ts}`, { cache: 'no-store' });
             if(resK.ok) {
                 const dataK = await resK.json();
@@ -429,7 +407,6 @@
                 }
             }
             
-            // 차량 세팅 가져오기
             const resV = await fetch(`${API_BASE_URL}/api/settings/vehicles?t=${ts}`, { cache: 'no-store' });
             if(resV.ok) {
                 const dataV = await resV.json();
@@ -437,23 +414,16 @@
                     const parsed = JSON.parse(dataV.value);
                     if(parsed) {
                         state.vehicles = parsed;
-                        // 로컬 이중 백업
                         localStorage.setItem('family_ledger_vehicles', JSON.stringify(state.vehicles));
                     }
-                    if(document.getElementById('view-car').classList.contains('hidden') === false) {
-                        renderCar();
-                    }
+                    if(document.getElementById('view-car').classList.contains('hidden') === false) renderCar();
                 }
             }
-        } catch (error) { 
-            console.warn("설정 동기화 실패. 로컬 데이터로 임시 구동합니다.", error); 
-        }
+        } catch (error) { console.warn("설정 동기화 지연", error); }
     }
 
     async function saveSettings(key, valueObj) {
-        // 일단 무조건 스마트폰 로컬에 저장하여 증발 방지
         localStorage.setItem(`family_ledger_${key}`, JSON.stringify(valueObj));
-        
         if(!API_BASE_URL) return;
         try {
             const res = await fetch(`${API_BASE_URL}/api/settings/${key}`, {
@@ -461,32 +431,22 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ value: JSON.stringify(valueObj) })
             });
-            if(res.ok) {
-                await fetchSettings(); 
-            } else {
-                showToast("⚠️ 서버 설정 반영 지연(기기에는 임시 저장됨)");
-            }
-        } catch (error) { 
-            console.warn("설정 저장 에러", error);
-            showToast("⚠️ 서버 오프라인(기기에는 안전하게 저장됨)");
-        }
+            if(res.ok) { await fetchSettings(); } 
+            else { showToast("⚠️ 서버 반영 지연"); }
+        } catch (error) { showToast("⚠️ 오프라인 임시저장됨"); }
     }
 
     /* =====================================================================
-       [초기화 및 앱 로직]
+       [초기화 및 공통 로직]
        ===================================================================== */
     window.addEventListener('load', async () => {
-        // 화면을 켜자마자 로컬 백업이 있으면 먼저 불러와서 번쩍거림 방지
         const localUsers = localStorage.getItem('family_ledger_users');
         if(localUsers) state.users = JSON.parse(localUsers);
-        
         const localVehicles = localStorage.getItem('family_ledger_vehicles');
         if(localVehicles) state.vehicles = JSON.parse(localVehicles);
-
         const localKakao = localStorage.getItem('family_ledger_kakao');
         if(localKakao) state.kakaoMap = JSON.parse(localKakao);
 
-        // 마지막 보던 탭으로 시작점 세팅
         const lastTab = localStorage.getItem('family_ledger_last_tab') || 'input';
         history.pushState({ tab: lastTab }, "", "");
         switchTabUI(lastTab);
@@ -494,7 +454,6 @@
         initTheme(); 
         document.getElementById('input-date').valueAsDate = new Date();
         
-        // 데이터 통신 시도 (성공하면 로컬 데이터를 덮어쓰고, 실패해도 로컬은 유지됨)
         await fetchSettings();
         await fetchTransactions();
         
@@ -514,6 +473,37 @@
     });
 
     /* =====================================================================
+       [내역 수정/삭제 로직 신규 복구]
+       ===================================================================== */
+    function confirmDeleteTx(id) {
+        uiConfirm("해당 가계부 내역을 정말 삭제하시겠습니까?", async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/transactions/${id}`, { method: 'DELETE' });
+                if(res.ok) {
+                    showToast("삭제 완료!");
+                    fetchTransactions();
+                } else { showToast("삭제 실패"); }
+            } catch(e) { showToast("통신 오류"); }
+        });
+    }
+
+    function promptEditTx(id, oldAmount, oldMemo) {
+        uiPromptNum(`금액 수정 (기존 메모: ${oldMemo})`, oldAmount, async (newAmount) => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/transactions/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: parseInt(newAmount), memo: oldMemo })
+                });
+                if(res.ok) {
+                    showToast("수정 완료!");
+                    fetchTransactions();
+                } else { showToast("수정 실패"); }
+            } catch(e) { showToast("통신 오류"); }
+        });
+    }
+
+    /* =====================================================================
        [유저 모달 및 관리]
        ===================================================================== */
     function updateUIForUser() {
@@ -528,8 +518,6 @@
         listEl.innerHTML = '';
         state.users.forEach(u => {
             const isSelected = u === state.currentUser;
-            
-            // [신규] 카톡 연동 여부 확인 및 버튼 생성
             const mappedId = Object.keys(state.kakaoMap).find(key => state.kakaoMap[key] === u);
             const kakaoBtnClass = mappedId ? 'bg-green-500 text-white' : 'bg-[#FEE500] text-[#191919]';
             const kakaoBtnText = mappedId ? '카톡완료' : '카톡연동';
@@ -554,86 +542,53 @@
 
     function closeUserModal() { document.getElementById('user-modal').classList.add('hidden'); }
 
-    // [신규] 카톡 아이디 입력 및 매핑 기능
     function promptKakaoId(e, name) {
         e.stopPropagation();
         const existingId = Object.keys(state.kakaoMap).find(key => state.kakaoMap[key] === name) || '';
-        const msg = `[${name}]님의 카카오톡 고유 ID를 입력해주세요.\n(챗봇에 금액입력 시 안내받은 영문/숫자 조합)`;
-        
-        // 브라우저 기본 prompt 팝업 사용
-        const inputId = prompt(msg, existingId);
+        const inputId = prompt(`[${name}]님의 카카오톡 고유 ID를 입력해주세요.\n(챗봇에 금액입력 시 안내받은 영문/숫자 조합)`, existingId);
         if(inputId !== null) {
-            // 다른 사람에게 중복 할당된 기존 매핑 정리
-            for (let key in state.kakaoMap) {
-                if(state.kakaoMap[key] === name) delete state.kakaoMap[key];
-            }
-            // 새 매핑 추가
-            if(inputId.trim() !== '') {
-                state.kakaoMap[inputId.trim()] = name;
-            }
+            for (let key in state.kakaoMap) { if(state.kakaoMap[key] === name) delete state.kakaoMap[key]; }
+            if(inputId.trim() !== '') { state.kakaoMap[inputId.trim()] = name; }
             saveSettings('kakao_map', state.kakaoMap);
-            openUserModal();
-            showToast("카카오톡 아이디가 동기화되었습니다!");
+            openUserModal(); showToast("카카오톡 연동 완료!");
         }
     }
 
-    function setUser(name) {
-        state.currentUser = name;
-        updateUIForUser(); closeUserModal();
-        showToast(`'${name}'(으)로 전환되었습니다.`);
-    }
+    function setUser(name) { state.currentUser = name; updateUIForUser(); closeUserModal(); }
 
     async function addUser() {
         const nameInput = document.getElementById('new-user-name');
         const name = nameInput.value.trim();
-        if(!name) return;
-        if(state.users.includes(name)) return showToast("이미 존재하는 이름입니다.");
-        
-        state.users.push(name); 
-        await saveSettings('users', state.users);
-        
-        nameInput.value = ''; openUserModal(); 
-        showToast(`${name} 추가됨!`);
+        if(!name || state.users.includes(name)) return;
+        state.users.push(name); await saveSettings('users', state.users);
+        nameInput.value = ''; openUserModal(); showToast(`${name} 추가됨!`);
     }
 
     function handleDeleteUser(e, name) {
         e.stopPropagation(); 
-        uiConfirm(`[${name}] 가족 구성원을 삭제하시겠습니까?\n(기록은 남아있습니다)`, async () => {
+        uiConfirm(`[${name}] 가족 구성원을 삭제하시겠습니까?`, async () => {
             state.users = state.users.filter(u => u !== name);
             await saveSettings('users', state.users); 
-            
-            if(state.currentUser === name) setUser(state.users[0]);
-            else openUserModal();
-            showToast("삭제되었습니다.");
+            if(state.currentUser === name) setUser(state.users[0]); else openUserModal();
         });
     }
 
-    /* =====================================================================
-       [가계부 기록 및 서버 전송]
-       ===================================================================== */
     function setType(type) {
         state.currentType = type;
         document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('selected-expense', 'selected-income'));
         const catExpense = document.getElementById('category-expense');
         const catIncome = document.getElementById('category-income');
-        
         document.getElementById('input-fixed').checked = false;
 
         if(type === 'expense') {
             document.getElementById('btn-type-expense').classList.add('selected-expense');
             catExpense.classList.remove('hidden'); catIncome.classList.add('hidden');
-            document.getElementById('label-date').innerText = '언제 쓰셨나요?';
-            document.getElementById('label-amount').innerText = '얼마인가요?';
             document.getElementById('label-category').innerText = '어디에 쓰셨나요?';
-            document.getElementById('label-fixed').innerHTML = `매달 나가는 <strong class="text-red-500 dark:text-red-400">고정 지출</strong>이에요.`;
             state.currentCategory = '식비';
         } else {
             document.getElementById('btn-type-income').classList.add('selected-income');
             catExpense.classList.add('hidden'); catIncome.classList.remove('hidden');
-            document.getElementById('label-date').innerText = '언제 들어왔나요?';
-            document.getElementById('label-amount').innerText = '얼마가 들어왔나요?';
             document.getElementById('label-category').innerText = '어떤 수입인가요?';
-            document.getElementById('label-fixed').innerHTML = `매달 들어오는 <strong class="text-blue-600 dark:text-blue-400">고정 수입</strong>이에요.`;
             state.currentCategory = '월급';
         }
     }
@@ -641,10 +596,8 @@
     async function uploadReceipt(inputElement) {
         const file = inputElement.files[0];
         if(!file) return;
-        
-        showToast("📸 사진 분석 중입니다...");
+        showToast("📸 사진 분석 중...");
         const formData = new FormData(); formData.append("file", file);
-        
         try {
             const response = await fetch(`${API_BASE_URL}/api/ocr`, { method: 'POST', body: formData });
             const data = await response.json();
@@ -652,17 +605,14 @@
                 document.getElementById('input-amount').value = data.amount;
                 document.getElementById('input-memo').value = data.memo;
                 showToast("✅ 영수증 인식 성공!");
-            } else { showToast("❌ 분석 실패. 직접 입력해주세요."); }
-        } catch(error) { showToast("서버 통신 에러가 발생했습니다."); }
-        
+            } else { showToast("❌ 분석 실패"); }
+        } catch(error) { showToast("통신 에러"); }
         inputElement.value = '';
     }
 
     async function saveData() {
         const amount = document.getElementById('input-amount').value;
         if(!amount) return showToast("금액을 입력해주세요!");
-        const isFixed = document.getElementById('input-fixed').checked;
-
         const newTx = {
             user: state.currentUser,
             date: document.getElementById('input-date').value,
@@ -670,26 +620,21 @@
             category: state.currentCategory,
             amount: parseInt(amount),
             memo: document.getElementById('input-memo').value,
-            is_fixed: isFixed,
+            is_fixed: document.getElementById('input-fixed').checked,
             vehicle_id: null
         };
-        
         try {
             const response = await fetch(`${API_BASE_URL}/api/transactions`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTx)
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newTx)
             });
-            
             if (response.ok) {
                 document.getElementById('input-amount').value = '';
                 document.getElementById('input-memo').value = '';
-                document.getElementById('input-fixed').checked = false;
                 showToast("✅ 서버에 저장 완료!");
                 await fetchTransactions(); 
                 setTimeout(() => switchTab('list'), 800);
-            } else { showToast("❌ 저장 중 오류가 발생했습니다."); }
-        } catch (error) { showToast("❌ 서버 연결 실패"); }
+            } else { showToast("❌ 저장 오류"); }
+        } catch (error) { showToast("❌ 연결 실패"); }
     }
 
     function renderList() {
@@ -716,10 +661,17 @@
             const sign = isExp ? '-' : '+';
             const fixedBadge = isFixedVal ? `<span class="ml-2 text-sm bg-${color}-100 dark:bg-${color}-900 text-${color}-700 dark:text-${color}-200 px-2 py-1 rounded-md align-middle whitespace-nowrap"><i class="fa-solid fa-thumbtack mr-1"></i>고정</span>` : '';
 
+            // [수정] 삭제 및 수정 버튼 UI 추가
             listEl.innerHTML += `
                 <div class="bg-white dark:bg-[#191919] rounded-xl shadow-md p-4 sm:p-5 mb-4 border-l-8 border-${color}-500 transition-colors flex flex-col gap-1">
-                    <div class="text-gray-500 dark:text-gray-400 text-sm sm:text-base font-black flex items-center whitespace-nowrap">
-                        ${t.date} ${fixedBadge}
+                    <div class="flex justify-between items-start">
+                        <div class="text-gray-500 dark:text-gray-400 text-sm sm:text-base font-black flex items-center whitespace-nowrap">
+                            ${t.date} ${fixedBadge}
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="promptEditTx(${t.id}, ${t.amount}, '${t.memo || ''}')" class="text-blue-500 bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg transition active:bg-blue-100"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="confirmDeleteTx(${t.id})" class="text-red-500 bg-red-50 dark:bg-red-900/30 p-2 rounded-lg transition active:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
                     <div class="text-xl sm:text-2xl font-black dark:text-white truncate w-full">${t.category} <span class="text-base sm:text-lg text-gray-500 dark:text-gray-400 font-bold ml-1">${t.memo || ''}</span></div>
                     <div class="text-2xl sm:text-3xl font-black text-${color}-600 dark:text-${color}-400 mt-1 whitespace-nowrap">${sign} ${t.amount.toLocaleString()}원</div>
@@ -737,109 +689,68 @@
         const ctx = document.getElementById('expensePieChart');
         if(!ctx) return;
         if(pieChartInstance) pieChartInstance.destroy();
-
-        const labels = Object.keys(dataObj);
-        const data = Object.values(dataObj);
-        if(data.length === 0) { ctx.style.display = 'none'; return; }
+        if(Object.values(dataObj).length === 0) { ctx.style.display = 'none'; return; }
         ctx.style.display = 'block';
-
-        Chart.defaults.color = state.isDarkMode ? '#e2e8f0' : '#191919'; 
         pieChartInstance = new Chart(ctx, {
             type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'],
-                    borderWidth: state.isDarkMode ? 2 : 0, borderColor: state.isDarkMode ? '#191919' : '#fff'
-                }]
-            },
+            data: { labels: Object.keys(dataObj), datasets: [{ data: Object.values(dataObj), backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'], borderWidth: state.isDarkMode ? 2 : 0, borderColor: state.isDarkMode ? '#191919' : '#fff' }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
         });
     }
 
     function downloadExcel() {
         const myData = state.transactions.filter(t => t.user === state.currentUser);
-        if(myData.length === 0) return showToast("다운로드할 데이터가 없습니다.");
-        
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
-        csvContent += "날짜,구분,카테고리,금액,메모\n";
-        
-        myData.forEach(t => {
-            const typeStr = t.type === 'expense' ? '지출' : '수입';
-            csvContent += `${t.date},${typeStr},${t.category},${t.amount},${t.memo || ''}\n`;
-        });
-        
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${state.currentUser}_가계부_내역.csv`);
+        if(myData.length === 0) return showToast("데이터가 없습니다.");
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF날짜,구분,카테고리,금액,메모\n";
+        myData.forEach(t => csvContent += `${t.date},${t.type==='expense'?'지출':'수입'},${t.category},${t.amount},${t.memo||''}\n`);
+        const link = document.createElement("a"); link.setAttribute("href", encodeURI(csvContent)); link.setAttribute("download", `${state.currentUser}_가계부.csv`);
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        showToast("엑셀 파일이 다운로드 되었습니다.");
     }
 
     /* =====================================================================
-       [차량 관리 로직 (DB 연동 완전판)]
+       [탭 3 (차량 관리)]
        ===================================================================== */
     function renderCar() {
         const selectEl = document.getElementById('vehicle-select');
         selectEl.innerHTML = '';
-
         if(state.vehicles.length === 0) {
             document.getElementById('car-content').classList.add('hidden');
             document.getElementById('no-car-message').classList.remove('hidden');
-            state.currentVehicleId = null;
-            return;
+            state.currentVehicleId = null; return;
         }
-
         document.getElementById('car-content').classList.remove('hidden');
         document.getElementById('no-car-message').classList.add('hidden');
-
-        state.vehicles.forEach(v => {
-            selectEl.innerHTML += `<option value="${v.id}">${v.name}</option>`;
-        });
-
-        if(!state.currentVehicleId || !state.vehicles.find(v => v.id == state.currentVehicleId)) {
-            state.currentVehicleId = state.vehicles[0].id;
-        }
-        selectEl.value = state.currentVehicleId;
-        drawVehicleDetails();
+        state.vehicles.forEach(v => selectEl.innerHTML += `<option value="${v.id}">${v.name}</option>`);
+        if(!state.currentVehicleId || !state.vehicles.find(v => v.id == state.currentVehicleId)) state.currentVehicleId = state.vehicles[0].id;
+        selectEl.value = state.currentVehicleId; drawVehicleDetails();
     }
 
-    function changeVehicle(id) {
-        state.currentVehicleId = parseInt(id); drawVehicleDetails();
-    }
+    function changeVehicle(id) { state.currentVehicleId = parseInt(id); drawVehicleDetails(); }
 
     function drawVehicleDetails() {
         const car = state.vehicles.find(v => v.id === state.currentVehicleId);
         if(!car) return;
-
         document.getElementById('display-car-name').innerText = car.name;
         document.getElementById('display-car-plate').innerText = car.plate;
         document.getElementById('car-current-km').value = car.currentKm;
         
-        const listEl = document.getElementById('consumables-list');
-        listEl.innerHTML = '';
-
+        const listEl = document.getElementById('consumables-list'); listEl.innerHTML = '';
         car.consumables.forEach(c => {
             const usedKm = car.currentKm - c.lastKm;
             const percent = Math.min(Math.round((usedKm / c.cycle) * 100), 100);
             let statusColor = 'green'; let statusText = '양호';
-            if (percent >= 90) { statusColor = 'red'; statusText = '교체 임박!'; }
-            else if (percent >= 70) { statusColor = 'orange'; statusText = '점검 필요'; }
+            if (percent >= 90) { statusColor = 'red'; statusText = '교체 임박!'; } else if (percent >= 70) { statusColor = 'orange'; statusText = '점검 필요'; }
 
             listEl.innerHTML += `
                 <div class="bg-white dark:bg-[#191919] p-4 sm:p-5 rounded-2xl shadow-md mb-4 border-2 border-gray-100 dark:border-gray-700 transition-colors">
                     <div class="flex justify-between items-end mb-2 sm:mb-3">
                         <div class="shrink min-w-0 pr-2">
                             <h4 class="text-xl sm:text-2xl font-black text-[#191919] dark:text-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"><i class="fa-solid ${c.icon} text-gray-600 dark:text-gray-400 mr-1.5 w-6 sm:w-8"></i>${c.name}</h4>
-                            <p class="text-sm sm:text-base font-bold text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 whitespace-nowrap overflow-hidden text-ellipsis">권장: ${c.desc}</p>
+                            <p class="text-sm sm:text-base font-bold text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">권장: ${c.desc}</p>
                         </div>
                         <div class="text-right shrink-0">
-                            <p class="text-${statusColor}-500 font-black text-xl sm:text-2xl whitespace-nowrap">${statusText}</p>
-                            <p class="text-xs sm:text-sm font-bold text-gray-400 mt-1 sm:mt-2 cursor-pointer hover:text-[#FEE500] bg-gray-100 dark:bg-gray-700 px-2 py-1 sm:px-3 sm:py-2 rounded-lg whitespace-nowrap" onclick="editLastKm('${c.id}')">
-                                최근: <strong class="text-[#191919] dark:text-white">${c.lastKm.toLocaleString()}</strong>km <i class="fa-solid fa-pen ml-1"></i>
-                            </p>
+                            <p class="text-${statusColor}-500 font-black text-xl sm:text-2xl">${statusText}</p>
+                            <p class="text-xs sm:text-sm font-bold text-gray-400 mt-1 sm:mt-2 cursor-pointer bg-gray-100 dark:bg-gray-700 px-2 py-1 sm:px-3 sm:py-2 rounded-lg" onclick="editLastKm('${c.id}')">최근: <strong class="text-[#191919] dark:text-white">${c.lastKm.toLocaleString()}</strong>km <i class="fa-solid fa-pen ml-1"></i></p>
                         </div>
                     </div>
                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-5 sm:h-6 mt-3 sm:mt-4 overflow-hidden border-2 border-gray-300 dark:border-gray-600 shadow-inner">
@@ -856,11 +767,8 @@
     async function updateMileage() {
         const km = parseInt(document.getElementById('car-current-km').value);
         if(!km) return;
-        const car = state.vehicles.find(v => v.id === state.currentVehicleId);
-        car.currentKm = km; 
-        await saveSettings('vehicles', state.vehicles);
-        showToast("계기판이 업데이트 되었습니다!"); 
-        drawVehicleDetails();
+        state.vehicles.find(v => v.id === state.currentVehicleId).currentKm = km; 
+        await saveSettings('vehicles', state.vehicles); drawVehicleDetails(); showToast("업데이트 됨!");
     }
 
     function uiConfirmReplaceConsumable(cId) {
@@ -870,9 +778,7 @@
             const car = state.vehicles.find(v => v.id === state.currentVehicleId);
             const item = car.consumables.find(c => c.id === cId);
             car.currentKm = inputKm; item.lastKm = inputKm;   
-            await saveSettings('vehicles', state.vehicles);
-            showToast(`${item.name} 교체 완료!`); 
-            drawVehicleDetails(); 
+            await saveSettings('vehicles', state.vehicles); drawVehicleDetails(); showToast("교체 완료!");
         });
     }
 
@@ -880,105 +786,50 @@
         const car = state.vehicles.find(v => v.id === state.currentVehicleId);
         const item = car.consumables.find(c => c.id === cId);
         uiPromptNum(`[${item.name}] 마지막 교체 주행거리`, item.lastKm, async (newKm) => {
-            item.lastKm = newKm; 
-            await saveSettings('vehicles', state.vehicles);
-            drawVehicleDetails(); 
-            showToast("수동으로 수정되었습니다.");
+            item.lastKm = newKm; await saveSettings('vehicles', state.vehicles); drawVehicleDetails();
         });
     }
 
     async function executeAddVehicle() {
         const name = document.getElementById('prompt-car-name').value.trim();
         const plate = document.getElementById('prompt-car-plate').value.trim();
-        if(!name) return showToast("차량 이름을 입력해주세요.");
-        
-        const newCar = {
-            id: Date.now(), name: name, plate: plate || '번호 미등록', currentKm: 0,
-            consumables: JSON.parse(JSON.stringify(defaultConsumables))
-        };
-        state.vehicles.push(newCar); 
-        state.currentVehicleId = newCar.id;
-        
-        await saveSettings('vehicles', state.vehicles);
-        closePromptCar(); renderCar(); showToast("새 차량 등록 완료!");
+        if(!name) return showToast("이름을 입력해주세요.");
+        const newCar = { id: Date.now(), name: name, plate: plate || '미등록', currentKm: 0, consumables: JSON.parse(JSON.stringify(defaultConsumables)) };
+        state.vehicles.push(newCar); state.currentVehicleId = newCar.id;
+        await saveSettings('vehicles', state.vehicles); closePromptCar(); renderCar(); showToast("등록 완료!");
     }
 
     function uiConfirmDeleteVehicle() {
         if(state.vehicles.length === 0) return;
-        const car = state.vehicles.find(v => v.id === state.currentVehicleId);
-        uiConfirm(`[${car.name}] 차량을 완전히 삭제하시겠습니까?`, async () => {
+        uiConfirm(`차량을 완전히 삭제하시겠습니까?`, async () => {
             state.vehicles = state.vehicles.filter(v => v.id !== state.currentVehicleId);
             state.currentVehicleId = state.vehicles.length > 0 ? state.vehicles[0].id : null;
-            
-            await saveSettings('vehicles', state.vehicles);
-            renderCar(); showToast("차량이 삭제되었습니다.");
+            await saveSettings('vehicles', state.vehicles); renderCar(); showToast("삭제됨");
         });
     }
 
     /* =====================================================================
-       [다크모드 및 공통 모달 함수들]
+       [UI 유틸리티 모달들]
        ===================================================================== */
     function toggleDarkMode() {
         state.isDarkMode = !state.isDarkMode;
-        const htmlNode = document.documentElement;
-        const bodyNode = document.body;
-        const icon = document.getElementById('dark-mode-icon');
-        if (state.isDarkMode) {
-            htmlNode.classList.add('dark'); bodyNode.classList.add('dark'); bodyNode.classList.remove('light');
-            icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
-            localStorage.setItem('family_ledger_theme', 'dark');
-        } else {
-            htmlNode.classList.remove('dark'); bodyNode.classList.remove('dark'); bodyNode.classList.add('light');
-            icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
-            localStorage.setItem('family_ledger_theme', 'light');
-        }
-        if(pieChartInstance) {
-            Chart.defaults.color = state.isDarkMode ? '#e2e8f0' : '#191919';
-            pieChartInstance.update();
-        }
+        const htmlNode = document.documentElement; const icon = document.getElementById('dark-mode-icon');
+        if (state.isDarkMode) { htmlNode.classList.add('dark'); icon.classList.replace('fa-moon', 'fa-sun'); localStorage.setItem('family_ledger_theme', 'dark'); } 
+        else { htmlNode.classList.remove('dark'); icon.classList.replace('fa-sun', 'fa-moon'); localStorage.setItem('family_ledger_theme', 'light'); }
+        if(pieChartInstance) { Chart.defaults.color = state.isDarkMode ? '#e2e8f0' : '#191919'; pieChartInstance.update(); }
     }
-
-    function initTheme() {
-        const savedTheme = localStorage.getItem('family_ledger_theme');
-        if (savedTheme === 'dark') toggleDarkMode(); 
-    }
-
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.innerText = msg; toast.style.opacity = '1';
-        setTimeout(() => toast.style.opacity = '0', 2000);
-    }
-
+    function initTheme() { if (localStorage.getItem('family_ledger_theme') === 'dark') toggleDarkMode(); }
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2000); }
     let confirmCallback = null;
-    function uiConfirm(msg, callback) {
-        document.getElementById('confirm-msg').innerText = msg;
-        document.getElementById('custom-confirm').classList.remove('hidden');
-        confirmCallback = callback;
-    }
+    function uiConfirm(msg, callback) { document.getElementById('confirm-msg').innerText = msg; document.getElementById('custom-confirm').classList.remove('hidden'); confirmCallback = callback; }
     function closeConfirmModal() { document.getElementById('custom-confirm').classList.add('hidden'); }
     document.getElementById('confirm-ok-btn').addEventListener('click', () => { closeConfirmModal(); if(confirmCallback) confirmCallback(); });
-
     let numPromptCallback = null;
-    function uiPromptNum(title, defaultVal, callback) {
-        document.getElementById('prompt-num-title').innerText = title;
-        document.getElementById('prompt-num-input').value = defaultVal;
-        document.getElementById('custom-prompt-num').classList.remove('hidden');
-        document.getElementById('prompt-num-input').focus();
-        numPromptCallback = callback;
-    }
+    function uiPromptNum(title, defaultVal, callback) { document.getElementById('prompt-num-title').innerText = title; document.getElementById('prompt-num-input').value = defaultVal; document.getElementById('custom-prompt-num').classList.remove('hidden'); document.getElementById('prompt-num-input').focus(); numPromptCallback = callback; }
     function closePromptNum() { document.getElementById('custom-prompt-num').classList.add('hidden'); }
-    document.getElementById('prompt-num-ok-btn').addEventListener('click', () => {
-        const val = parseInt(document.getElementById('prompt-num-input').value);
-        if(!isNaN(val)) { closePromptNum(); if(numPromptCallback) numPromptCallback(val); }
-    });
-
-    function uiPromptAddVehicle() {
-        document.getElementById('prompt-car-name').value = '';
-        document.getElementById('prompt-car-plate').value = '';
-        document.getElementById('custom-prompt-car').classList.remove('hidden');
-    }
+    document.getElementById('prompt-num-ok-btn').addEventListener('click', () => { const val = document.getElementById('prompt-num-input').value; if(val !== "") { closePromptNum(); if(numPromptCallback) numPromptCallback(val); } });
+    function uiPromptAddVehicle() { document.getElementById('prompt-car-name').value = ''; document.getElementById('prompt-car-plate').value = ''; document.getElementById('custom-prompt-car').classList.remove('hidden'); }
     function closePromptCar() { document.getElementById('custom-prompt-car').classList.add('hidden'); }
-
 </script>
 </body>
 </html>
