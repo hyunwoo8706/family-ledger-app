@@ -339,7 +339,7 @@
 
 
     /* =====================================================================
-       [서버 동기화 & 실시간 통신 & 로컬 이중화 (완벽 백업)]
+       [서버 동기화 & 실시간 통신 & 무적의 백업 로직 추가]
        ===================================================================== */
     let ws;
 
@@ -363,9 +363,17 @@
 
             ws.onclose = () => { setTimeout(connectWebSocket, 3000); };
         } catch (error) {
-            setInterval(fetchTransactions, 10000); 
+            console.log("웹소켓 연결 실패. 폴링 모드로 전환합니다.");
         }
     }
+
+    // [버그 픽스] 웹소켓 알림이 죽었더라도 무조건 10초마다 가계부 및 '사용자/차계부' 강제 동기화
+    setInterval(() => {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            fetchTransactions();
+            fetchSettings();
+        }
+    }, 10000);
 
     function updateServerStatus(isOnline) {
         const dot = document.getElementById('status-dot');
@@ -434,7 +442,7 @@
     }
 
     async function saveSettings(key, valueObj) {
-        // [방어 로직] 1. 일단 무조건 스마트폰 로컬에 저장하여 증발 방지
+        // 일단 무조건 스마트폰 로컬에 저장하여 증발 방지
         localStorage.setItem(`family_ledger_${key}`, JSON.stringify(valueObj));
         
         if(!API_BASE_URL) return;
@@ -459,7 +467,7 @@
        [초기화 및 앱 로직]
        ===================================================================== */
     window.addEventListener('load', async () => {
-        // [방어 로직] 2. 화면을 켜자마자 로컬 백업이 있으면 먼저 불러와서 번쩍거림 방지
+        // 화면을 켜자마자 로컬 백업이 있으면 먼저 불러와서 번쩍거림 방지
         const localUsers = localStorage.getItem('family_ledger_users');
         if(localUsers) state.users = JSON.parse(localUsers);
         
