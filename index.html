@@ -280,6 +280,7 @@
         users: ['어머니', '아버지', '아들', '딸'], // 기본값
         transactions: [],
         vehicles: [], 
+        kakaoMap: {}, // 신규: 카카오톡 ID 매핑 객체 저장소
         currentVehicleId: null,
         currentType: 'expense',
         currentCategory: '식비',
@@ -367,12 +368,10 @@
         }
     }
 
-    // [수정됨] 웹소켓 알림이 죽었더라도 무조건 5초마다 가계부 및 '사용자/차계부' 강제 동기화 (10초 -> 5초 변경)
+    // [수정됨] 무조건 5초마다 강제 동기화 (PC-모바일 완벽 연동 보장)
     setInterval(() => {
-        if (!ws || ws.readyState !== WebSocket.OPEN) {
-            fetchTransactions();
-            fetchSettings();
-        }
+        fetchTransactions();
+        fetchSettings();
     }, 5000);
 
     function updateServerStatus(isOnline) {
@@ -417,6 +416,16 @@
                         state.currentUser = state.users[0];
                         updateUIForUser();
                     }
+                }
+            }
+
+            // [신규] 카카오 매핑 세팅 가져오기
+            const resK = await fetch(`${API_BASE_URL}/api/settings/kakao_map?t=${ts}`, { cache: 'no-store' });
+            if(resK.ok) {
+                const dataK = await resK.json();
+                if(dataK.value) {
+                    state.kakaoMap = JSON.parse(dataK.value);
+                    localStorage.setItem('family_ledger_kakao', JSON.stringify(state.kakaoMap));
                 }
             }
             
@@ -474,6 +483,9 @@
         const localVehicles = localStorage.getItem('family_ledger_vehicles');
         if(localVehicles) state.vehicles = JSON.parse(localVehicles);
 
+        const localKakao = localStorage.getItem('family_ledger_kakao');
+        if(localKakao) state.kakaoMap = JSON.parse(localKakao);
+
         // 마지막 보던 탭으로 시작점 세팅
         const lastTab = localStorage.getItem('family_ledger_last_tab') || 'input';
         history.pushState({ tab: lastTab }, "", "");
@@ -516,15 +528,24 @@
         listEl.innerHTML = '';
         state.users.forEach(u => {
             const isSelected = u === state.currentUser;
+            
+            // [신규] 카톡 연동 여부 확인 및 버튼 생성
+            const mappedId = Object.keys(state.kakaoMap).find(key => state.kakaoMap[key] === u);
+            const kakaoBtnClass = mappedId ? 'bg-green-500 text-white' : 'bg-[#FEE500] text-[#191919]';
+            const kakaoBtnText = mappedId ? '카톡완료' : '카톡연동';
+
             listEl.innerHTML += `
                 <div class="flex items-center justify-between p-3 sm:p-4 rounded-xl border-2 ${isSelected ? 'border-[#FEE500] bg-[#FFF8B3] dark:bg-[#4A4315]' : 'border-gray-200 bg-white dark:bg-[#191919] dark:border-gray-600'}">
                     <div onclick="setUser('${u}')" class="flex-1 text-left text-xl sm:text-2xl font-black cursor-pointer ${isSelected ? 'text-[#191919] dark:text-[#FEE500]' : 'text-gray-700 dark:text-gray-300'} whitespace-nowrap overflow-hidden text-ellipsis">
                         ${isSelected ? '✅ ' : ''}${u}
                     </div>
-                    ${state.users.length > 1 ? `
-                    <button onclick="handleDeleteUser(event, '${u}')" class="text-red-500 px-3 py-2 sm:px-4 sm:py-3 bg-red-50 dark:bg-red-900/30 rounded-lg active:bg-red-100 dark:active:bg-red-800 transition shrink-0">
-                        <i class="fa-solid fa-trash text-lg sm:text-xl"></i>
-                    </button>` : ''}
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="promptKakaoId(event, '${u}')" class="text-xs sm:text-sm ${kakaoBtnClass} px-3 py-2 rounded-lg font-bold shadow-sm whitespace-nowrap transition">${kakaoBtnText}</button>
+                        ${state.users.length > 1 ? `
+                        <button onclick="handleDeleteUser(event, '${u}')" class="text-red-500 px-3 py-2 bg-red-50 dark:bg-red-900/30 rounded-lg active:bg-red-100 dark:active:bg-red-800 transition">
+                            <i class="fa-solid fa-trash text-lg"></i>
+                        </button>` : ''}
+                    </div>
                 </div>
             `;
         });
@@ -532,6 +553,29 @@
     }
 
     function closeUserModal() { document.getElementById('user-modal').classList.add('hidden'); }
+
+    // [신규] 카톡 아이디 입력 및 매핑 기능
+    function promptKakaoId(e, name) {
+        e.stopPropagation();
+        const existingId = Object.keys(state.kakaoMap).find(key => state.kakaoMap[key] === name) || '';
+        const msg = `[${name}]님의 카카오톡 고유 ID를 입력해주세요.\n(챗봇에 금액입력 시 안내받은 영문/숫자 조합)`;
+        
+        // 브라우저 기본 prompt 팝업 사용
+        const inputId = prompt(msg, existingId);
+        if(inputId !== null) {
+            // 다른 사람에게 중복 할당된 기존 매핑 정리
+            for (let key in state.kakaoMap) {
+                if(state.kakaoMap[key] === name) delete state.kakaoMap[key];
+            }
+            // 새 매핑 추가
+            if(inputId.trim() !== '') {
+                state.kakaoMap[inputId.trim()] = name;
+            }
+            saveSettings('kakao_map', state.kakaoMap);
+            openUserModal();
+            showToast("카카오톡 아이디가 동기화되었습니다!");
+        }
+    }
 
     function setUser(name) {
         state.currentUser = name;
